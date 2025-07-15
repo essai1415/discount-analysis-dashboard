@@ -231,7 +231,7 @@ def show_facts_and_figures(df):
             st.dataframe(obj_summary, use_container_width=True)
 
     # === Line Chart for Trends ===
-    st.markdown("### <b>Trend Exploration</b>", unsafe_allow_html=True)
+    st.markdown("### <b>Trend Exploration:</b>", unsafe_allow_html=True)
     time_col = st.selectbox("Select Time Column", options=['docdate'])
     metric_col = st.selectbox("Select Metric to Visualize", options=numeric_cols)
     if time_col and metric_col:
@@ -244,7 +244,7 @@ def show_facts_and_figures(df):
 
     # === Stakeholder Notes ===
     st.markdown("---")
-    st.markdown("### <b>Business Use Cases</b>", unsafe_allow_html=True)
+    st.markdown("### <b>Business Use Cases:</b>", unsafe_allow_html=True)
     st.markdown("""
     - Offers a 360° view of how discounts are distributed across products, customers, and sales metrics.  
     - Enables data-driven decision-making in discount policies by uncovering what drives discount value.  
