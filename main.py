@@ -17,7 +17,7 @@ def load_data():
     try:
         # Get file ID securely
         file_id = st.secrets["gdrive"]["file_id"]
-        url = f"https://drive.google.com/uc?id={file_id}"
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
         # Download and read Excel file
         response = requests.get(url)
