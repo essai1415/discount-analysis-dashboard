@@ -90,7 +90,7 @@ def show_facts_and_figures(df):
 
 
     # === Customer Insight ===
-    st.markdown("###  **Customer Insights**", unsafe_allow_html=True)
+    st.markdown("###  **Core Transaction Insights & Data Gaps**", unsafe_allow_html=True)
 
     # === Customer Transaction Summary - Single Line ===
     try:
