@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def show_facts_and_figures(df):
-    st.set_page_config(page_title="Jewellery Data Explorer", layout="wide")
+    st.set_page_config(page_title="Jewellery Data Explorer", layout="centered")
 
     st.markdown("### <b> Interactive Facts and Figures of the Dataset</b>", unsafe_allow_html=True)
 
