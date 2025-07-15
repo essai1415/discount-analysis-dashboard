@@ -9,7 +9,7 @@ import requests
 import io
 
 st.set_page_config(page_title="Jewellery Discount Dashboard", layout="centered")
-st.title("🧈 🧈🧈Jewellery Discount Analysis Dashboard")
+st.title("🧈 💰 🪙 Jewellery Discount Analysis Dashboard")
 
 # Load data
 @st.cache_data
