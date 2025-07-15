@@ -97,41 +97,6 @@ def show_facts_and_figures(df):
         # Detect customer and date columns
         customer_cols = [col for col in df.columns if 'cust' in col.lower()]
         
-        if customer_cols and 'docdate' in df.columns:
-            cust_col = customer_cols[0]
-            df['docdate'] = pd.to_datetime(df['docdate'], errors='coerce')
-            df = df.sort_values('docdate')
-
-            # Get first purchase date
-            first_purchase = df.groupby(cust_col)['docdate'].min().reset_index()
-            first_purchase.columns = [cust_col, 'first_purchase']
-            df = df.merge(first_purchase, on=cust_col)
-
-            # Tag New or Repeat
-            df['Customer Type'] = df.apply(
-                lambda row: 'New' if row['docdate'] == row['first_purchase'] else 'Repeat',
-                axis=1
-            )
-
-            # Count transactions by type
-            new_count = (df['Customer Type'] == 'New').sum()
-            repeat_count = (df['Customer Type'] == 'Repeat').sum()
-            total_txns = new_count + repeat_count
-
-            new_pct = round((new_count / total_txns) * 100, 2)
-            repeat_pct = round((repeat_count / total_txns) * 100, 2)
-
-            # Display in single line
-            st.markdown(
-                f"<b> Total Transactions:</b> {total_txns:,}  "
-                f"<b> New Customer Transactions:</b> {new_count:,} ({new_pct}%)  "
-                f"<b> Repeat Customer Transactions:</b> {repeat_count:,} ({repeat_pct}%)",
-                unsafe_allow_html=True
-            )
-        else:
-            st.markdown("**Customer or Date column missing.**", unsafe_allow_html=True)
-
-
         # Top brands
         top_brands = df['brand'].value_counts().head(5)
         st.markdown("-**Top Brands by Customer Count:**")
