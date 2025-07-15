@@ -51,8 +51,8 @@ def show_facts_and_figures(df):
 
                 st.markdown(f"""
                 •  **Total Transactions:** {total_txns:,}  
-                •  **New Customer Transactions:** {new_txns:,} ({new_pct}%)  
-                •  **Repeat Customer Transactions:** {repeat_txns:,} ({repeat_pct}%)
+                •  **New Customers:** {new_txns:,} ({new_pct}%)  
+                •  **Repeat Customers:** {repeat_txns:,} ({repeat_pct}%)
                 """, unsafe_allow_html=True)
             else:
                 st.markdown("• **Customer or Date column missing.**", unsafe_allow_html=True)
@@ -124,7 +124,7 @@ def show_facts_and_figures(df):
         # Missing values in categorical columns (including amcb with NaN and placeholder strings)
     missing_like = ["NULL", "NA", "NIL", "", "[NULL]"]
 
-    st.markdown("-**Missing Values in Categorical Columns (incl. AMCB):**")
+    st.markdown("-**Missing Values in Categorical Columns:**")
 
     found_missing = False
 
