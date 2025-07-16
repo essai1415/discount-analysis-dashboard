@@ -89,7 +89,7 @@ if analysis_type == "Quantitative Analysis":
         obdisc_total = df_plot['obdisc'].sum()
         ghsdisc_total = df_plot['ghsdisc'].sum()
 
-        labels = ['IDISC (Item Level)', 'OBDISC (Other Bill)', 'GHSDISC (Govt Scheme)']
+        labels = ['IDISC (Item Level)', 'OBDISC (Other Bill)', 'GHSDISC (Gold Harvest Scheme)']
         values = [idisc_total, obdisc_total, ghsdisc_total]
         percents = [val / discount_total for val in values]
         percent_labels = [f"{p:.1%}" for p in percents]
