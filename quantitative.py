@@ -51,7 +51,7 @@ predefined_insights = {
     "discount": [
         "Item-level discounts (IDISC) account for a massive 98.6% of all discounts, showing that most savings are applied directly on individual jewelry pieces.",
         "Other bill-level discounts (OBDISC) contribute less than 1%, indicating they play a very minimal role in the current pricing strategy.",
-        "Government scheme discounts (GHSDISC) make up just 0.5%, suggesting such programs are either rarely used or have limited impact.",
+        "Gold harvest scheme discounts (GHSDISC) make up just 0.5%, suggesting such programs are either rarely used or have limited impact.",
         "The discount structure is heavily dependent on item-level pricing, which simplifies operations but may limit strategic flexibility.",
         "Expanding the use of bill-level or scheme-based discounts could offer new levers for promotions or targeted campaigns."
     ],
