@@ -8,7 +8,7 @@ import seaborn as sns
 predefined_insights = {
     "Plot 1": [
         "The highest discount value was offered at RJH on 2025-01-16, indicating a possible major event or high-value purchase.",
-        "Locations like VRA, UDI, and TPP show consistently high discounts, useful for identifying high performing or high competition zones for future campaigns and inventory planning.",
+        "Locations like VRR, UDI, and TPP show consistently high discounts, useful for identifying high performing or high competition zones for future campaigns and inventory planning.",
         "Locations at the bottom of the list gave lower total discounts — possibly due to less footfall, fewer high-value transactions, or tighter pricing.",
         "Regional trends in discounting can help tailor offers based on local demand and sales performance.",
         "Repeating high-discount dates across multiple locations (e.g., Jan 13) suggests a pan-location campaign or festival-linked offer.",
