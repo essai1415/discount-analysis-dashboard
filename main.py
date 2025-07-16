@@ -109,7 +109,7 @@ if analysis_type == "Quantitative Analysis":
         plt.tight_layout()
         st.pyplot(fig)
 
-        # ✅ Now show the business insights *after* the bar chart
+        # Now show the business insights *after* the bar chart
         quantitative.plot_and_insight(df_plot, 'discount', "Discount Share")
 
     elif selected_plot == plot_options[7]:
