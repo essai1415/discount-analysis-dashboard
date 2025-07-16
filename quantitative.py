@@ -57,7 +57,7 @@ predefined_insights = {
     ],
     "priceband": [
         "Discounts clearly rise with higher price bands, especially beyond the ₹1 lakh mark, indicating a structured, tiered discounting approach.",
-        "Price bands like 'O(20L+)', 'M(22-35L)', and 'N(35-70L)' show the highest median and variability in discounts, reflecting flexibility for premium buyers.",
+        "Price bands like 'O(20L+)', 'M(12-15L)', and 'N(15-20L)' show the highest median and variability in discounts, reflecting flexibility for premium buyers.",
         "Lower price bands such as 'A(0-25K)', 'C(50-100K)', and 'B(25-50K)' receive very low discounts.",
         "The spread in higher bands suggests scope for negotiation, possibly used to close high-value deals.",
         "This structure reinforces a premium customer experience, rewarding larger spends with more significant savings."
