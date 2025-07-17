@@ -16,7 +16,7 @@ predefined_insights = {
         "North 3 and South 3 regions receive the highest average discounts.",
         "Mid-performing regions like North 4, West 2, West 3 and South 1 show moderate discounting.",
         "Regions such as East 1, North 2, and East 2 are on the lower end.",
-        "South and East 2 (duplicate label) show extremely low discounts.",
+        "South shows extremely low discounts.",
         "Monitor margin impact in high-discount regions."
     ],
     "level": [
