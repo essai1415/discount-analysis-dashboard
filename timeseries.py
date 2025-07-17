@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker
 # Define insights (revised to 5 per plot)
 predefined_insights = {
     "Plot 1": [
-        "Spikes in discounts (Days 10–13) may align with events like festivals, auspicious dates, or marketing campaigns.",
+        "Spikes in discounts (Days 9–13) may align with events like festivals, auspicious dates, or marketing campaigns.",
         "Sudden drop after peak days suggests end of limited-period offers or demand saturation post events.",
         "Steady mid to end month discounting may indicate efforts to sustain engagement or clear non premium stock.",
         "Low discounts in the first week could reflect strategy to maintain premium pricing before planned triggers.",
@@ -16,7 +16,7 @@ predefined_insights = {
     ],
     "Plot 2": [
         "Comparing sales on days with high OBDISC vs GHSDISC can help decide which type of discount works better.",
-        "OBDISC changes a lot, with big jumps on days like 17, 21, and 23 — this may be due to special store offers or quick sales pushes.",
+        "OBDISC changes a lot, with big jumps on days like 17, 21, and 25 — this may be due to special store offers or quick sales pushes.",
         "GHSDISC stays more steady, showing it’s part of a planned customer scheme.",
         "On days like the 31st, both discounts rise together — this might be to boost end-of-month sales.",
         "GHSDISC builds long-term loyalty, while OBDISC helps with quick sales when needed."
