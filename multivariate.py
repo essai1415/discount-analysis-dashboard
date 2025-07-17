@@ -215,7 +215,7 @@ def plot_and_insight(df, plot_key, plot_label):
             grouped = df_clean.groupby(['region', 'brand', 'totcategory'])['discount'].mean().reset_index()
             plt.figure(figsize=(14, 6))
             sns.barplot(data=grouped, x='region', y='discount', hue='brand')
-            plt.title("Avg Discount by Region, Brand, Category")
+            plt.title("Avg Discount by Region, Brand")
             plt.xticks(rotation=30)
             plt.grid(True)
             plt.tight_layout()
