@@ -218,7 +218,7 @@ elif analysis_type == "Multivariate Analysis":
         "Plot 4": "4.Discount vs Day and Gold Price",
         "Plot 5": "5.Correlation of Discounts with Numeric Variables",
         "Plot 6": "6.Top 50 Customers by Avg Discount",
-        "Plot 7": "7.Avg Discount by Region, Brand, Category"
+        "Plot 7": "7.Avg Discount by Region, Brand"
     }
 
     multivariate_plot_keys = list(multivariate_plot_labels.keys())
