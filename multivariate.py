@@ -32,7 +32,7 @@ predefined_insights = {
         "The chart compares daily average discount (blue) with gold price (orange) over the month.",
         "There is no strong direct link, high gold prices don’t always result in higher discounts.",
         "On days like 11 to 13, both discount and gold price were high likely to balance cost and keep customers interested.",
-        "On days like Day 4, gold price shot up but discount stayed low possibly to protect profit margins.",
+        "On days like Day 3, gold price shot up but discount stayed low possibly to protect profit margins.",
         "Tracking these trends helps decide whether to adjust discounts based on gold price changes to keep sales stable."
     ],
     "Plot 5": [
