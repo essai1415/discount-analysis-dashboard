@@ -83,6 +83,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import matplotlib.ticker as ticker
 
 def plot_and_insight(df_plot, x_col, x_label):
     corr = df_plot['discount'].corr(df_plot[x_col]) if pd.api.types.is_numeric_dtype(df_plot[x_col]) else None
@@ -99,6 +100,11 @@ def plot_and_insight(df_plot, x_col, x_label):
             ax.set(title=f"{x_label} vs Discount", xlabel=x_label, ylabel="Discount")
             ax.text(0.95, 0.05, f"r = {corr:.2f}", transform=ax.transAxes, ha='right',
                     bbox=dict(boxstyle="round", fc="lightyellow"))
+
+            # ✅ Disable scientific notation for both axes
+            ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x:,.0f}'))
+            ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f'{y:,.0f}'))
+
             st.pyplot(fig)
 
         elif x_col != 'discount':
@@ -106,11 +112,16 @@ def plot_and_insight(df_plot, x_col, x_label):
             sns.boxplot(data=df_plot, x=x_col, y='discount', palette='Set2', ax=ax)
             ax.set(title=f"Discount by {x_label}", xlabel=x_label, ylabel="Discount")
             plt.xticks(rotation=45)
+
+            # ✅ Disable scientific notation for y-axis (discount)
+            ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f'{y:,.0f}'))
+
             st.pyplot(fig)
 
         st.markdown("---")
         st.markdown("### Insights for Business Stakeholders")
         for insight in predefined_insights.get(x_col, [f"No predefined insights available for {x_label}."]):
             st.markdown(f"- {insight}")
+
 
 
