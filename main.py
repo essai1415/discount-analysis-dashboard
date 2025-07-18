@@ -55,26 +55,38 @@ if analysis_type == "Quantitative Analysis":
         "10. Cluster EC Band vs Discount"
     ]
     selected_plot = st.selectbox("Select Quantitative Plot:", plot_options)
-    
-    # Match analysis string to run in quantitative module
+
+    # 1. Quantity vs Discount
     if selected_plot == plot_options[0]:
         df_plot = df[(df['qty'] > 0) & (df['discount'] > 0)]
         quantitative.plot_and_insight(df_plot, 'qty', "Quantity")
+
+    # 2. Value vs Discount
     elif selected_plot == plot_options[1]:
         df_plot = df[(df['value'] > 0) & (df['discount'] > 0)]
         quantitative.plot_and_insight(df_plot, 'value', "Total Bill Value")
+
+    # 3. Weight vs Discount
     elif selected_plot == plot_options[2]:
-        df_plot = df[(df['discount'] > 0) & (df['wt'] > 0)]
+        df_plot = df[(df['wt'] > 0) & (df['discount'] > 0)]
         quantitative.plot_and_insight(df_plot, 'wt', "Weight")
+
+    # 4. Making Charges vs Discount
     elif selected_plot == plot_options[3]:
-        df_plot = df[(df['discount'] > 0) & (df['mc'] > 0)]
+        df_plot = df[(df['mc'] > 0) & (df['discount'] > 0)]
         quantitative.plot_and_insight(df_plot, 'mc', "Making Charges")
+
+    # 5. Gold Price vs Discount
     elif selected_plot == plot_options[4]:
-        df_plot = df[(df['discount'] > 0) & (df['goldprice'] > 0)]
+        df_plot = df[(df['goldprice'] > 0) & (df['discount'] > 0)]
         quantitative.plot_and_insight(df_plot, 'goldprice', "Gold Price")
+
+    # 6. Stone Value vs Discount
     elif selected_plot == plot_options[5]:
-        df_plot = df[(df['discount'] > 0) & (df['stonevalue'] > 0)]
+        df_plot = df[(df['stonevalue'] > 0) & (df['discount'] > 0)]
         quantitative.plot_and_insight(df_plot, 'stonevalue', "Stone Value")
+
+    # 7. Idisc, Obdisc, Ghsdisc vs Discount (Bar Chart)
     elif selected_plot == plot_options[6]:
         import matplotlib.pyplot as plt
 
@@ -83,7 +95,6 @@ if analysis_type == "Quantitative Analysis":
             ((df['idisc'] > 0) | (df['ghsdisc'] > 0) | (df['obdisc'] > 0))
         ]
 
-        # Bar chart logic
         discount_total = df_plot['discount'].sum()
         idisc_total = df_plot['idisc'].sum()
         obdisc_total = df_plot['obdisc'].sum()
@@ -109,15 +120,20 @@ if analysis_type == "Quantitative Analysis":
         plt.tight_layout()
         st.pyplot(fig)
 
-        # Now show the business insights *after* the bar chart
+        # Reuse the same filtered df_plot
         quantitative.plot_and_insight(df_plot, 'discount', "Discount Share")
 
+    # 8. Price Band vs Discount
     elif selected_plot == plot_options[7]:
         df_plot = df[df['discount'] > 0].copy()
         quantitative.plot_and_insight(df_plot, 'priceband', "Price Band")
+
+    # 9. Total EC Band vs Average Discount
     elif selected_plot == plot_options[8]:
         df_plot = df[(df['discount'] > 0) & (df['totalecband'].str.lower() != 'nil')].copy()
         quantitative.plot_and_insight(df_plot, 'totalecband', "Total EC Band")
+
+    # 10. Cluster EC Band vs Discount
     elif selected_plot == plot_options[9]:
         df_plot = df.copy()
         df_plot['clusterecband'] = df_plot['clusterecband'].astype(str).str.strip().str.upper()
@@ -125,6 +141,7 @@ if analysis_type == "Quantitative Analysis":
         df_plot = df_plot[(df_plot['discount'] > 0) & (~df_plot['clusterecband'].isin(invalid))]
         df_plot['clusterecband'] = pd.Categorical(df_plot['clusterecband'], categories=sorted(df_plot['clusterecband'].unique()), ordered=True)
         quantitative.plot_and_insight(df_plot, 'clusterecband', "Cluster EC Band")
+
 
 elif analysis_type == "Qualitative Analysis":
     plot_options = [
