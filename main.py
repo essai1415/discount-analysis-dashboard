@@ -20,13 +20,17 @@ def load_data():
         file_id = st.secrets["gdrive"]["file_id"]
         url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
-        # Download and read Excel file
+        # Download and read Excel file using openpyxl engine
         response = requests.get(url)
         response.raise_for_status()
 
-        df = pd.read_excel(io.BytesIO(response.content))
+        df = pd.read_excel(io.BytesIO(response.content), engine="openpyxl")
+
         st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+        st.write("Columns found in dataset:", df.columns.tolist())  # Debug column names
+
         return df
+
     except Exception as e:
         st.error(f"Failed to load data: {e}")
         return pd.DataFrame()
