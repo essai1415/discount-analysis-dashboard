@@ -16,11 +16,19 @@ st.title("💎 Jewellery Discount Analysis Dashboard")
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_excel("DiscAnSamp.xlsx")
-        st.success(f" Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+        # Get file ID securely
+        file_id = st.secrets["gdrive"]["file_id"]
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+        # Download and read Excel file
+        response = requests.get(url)
+        response.raise_for_status()
+
+        df = pd.read_excel(io.BytesIO(response.content))
+        st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
         return df
     except Exception as e:
-        st.error(f" Failed to load data: {e}")
+        st.error(f"Failed to load data: {e}")
         return pd.DataFrame()
 
 df = load_data()
