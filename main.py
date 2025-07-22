@@ -325,20 +325,3 @@ elif analysis_type == "Time Series Analysis":
 
 elif analysis_type == "Facts and Figures":
     fandf.show_facts_and_figures(df)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
