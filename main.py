@@ -6,11 +6,28 @@ import matplotlib.pyplot as plt
 import multivariate
 import timeseries
 import fandf
+import base64
 import requests
 import io
 
 st.set_page_config(page_title="Jewellery Discount Dashboard", layout="centered")
-st.title("💎 Jewellery Discount Analysis Dashboard")
+# Load the image and convert to base64
+with open("gold.png", "rb") as f:
+    data = f.read()
+    encoded = base64.b64encode(data).decode()
+
+# Display the title in one line
+st.markdown(
+    f"""
+    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 30px;">
+        <div style="display: flex; align-items: center; gap: 15px; white-space: nowrap; max-width: 100%; overflow: hidden;">
+            <img src="data:image/png;base64,{encoded}" width="55" />
+            <span style="font-size: 2.4rem; font-weight: bold;">Jewellery Discount Analysis Dashboard</span>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Load data
 @st.cache_data
