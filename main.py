@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import quantitative as quantitative
 import qualitativee as qualitative
+import matplotlib.pyplot as plt
 import multivariate
 import timeseries
 import fandf
@@ -15,19 +16,11 @@ st.title("💎 Jewellery Discount Analysis Dashboard")
 @st.cache_data
 def load_data():
     try:
-        # Get file ID securely
-        file_id = st.secrets["gdrive"]["file_id"]
-        url = f"https://drive.google.com/uc?export=download&id={file_id}"
-
-        # Download and read Excel file
-        response = requests.get(url)
-        response.raise_for_status()
-
-        df = pd.read_excel(io.BytesIO(response.content))
-        st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+        df = pd.read_excel("DiscAnSamp.xlsx")
+        st.success(f" Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
         return df
     except Exception as e:
-        st.error(f"Failed to load data: {e}")
+        st.error(f" Failed to load data: {e}")
         return pd.DataFrame()
 
 df = load_data()
@@ -125,8 +118,11 @@ if analysis_type == "Quantitative Analysis":
 
     # 8. Price Band vs Discount
     elif selected_plot == plot_options[7]:
-        df_plot = df[df['discount'] > 0].copy()
-        quantitative.plot_and_insight(df_plot, 'priceband', "Price Band")
+        df_plot = df[df['priceband'].notnull()].copy()
+        df_plot['priceband'] = df_plot['priceband'].astype(str).str.strip().str.upper()
+        df_plot = df_plot[~df_plot['priceband'].isin(['NIL', 'NULL']) & (df_plot['discount'] > 0)]
+        df_plot = df_plot.groupby('priceband')['discount'].mean().reset_index().sort_values(by='discount', ascending=False)
+        qualitative.plot_and_insight(df_plot, 'priceband', "Price Band")
 
     # 9. Total EC Band vs Average Discount
     elif selected_plot == plot_options[8]:
@@ -163,7 +159,17 @@ elif analysis_type == "Qualitative Analysis":
         qualitative.plot_and_insight(df_plot, 'brand', "Brand")
     elif selected_plot == plot_options[1]:
         df_plot = df[(df['discount'] > 0) & (df['region'].notnull())]
-        df_plot = df_plot.groupby('region')['discount'].mean().reset_index().sort_values(by='discount', ascending=False)
+
+        #  Standardize region names
+        df_plot['region'] = df_plot['region'].astype(str).str.strip().str.upper()
+
+        #  Group and sort
+        df_plot = (
+            df_plot.groupby('region')['discount']
+            .mean()
+            .reset_index()
+            .sort_values(by='discount', ascending=False)
+        )
         qualitative.plot_and_insight(df_plot, 'region', "Region")
     elif selected_plot == plot_options[2]:
         df_plot = df[(df['discount'] > 0) & (df['level'].notnull())]
@@ -214,15 +220,63 @@ elif analysis_type == "Qualitative Analysis":
         # Insights
         qualitative.plot_and_insight(df_daily, 'day', "Day of Month", chart_type="line")
 
-
     elif selected_plot == plot_options[7]:
-        df_plot = df[df['priceband'].notnull()].copy()
-        df_plot['priceband'] = df_plot['priceband'].astype(str).str.strip().str.upper()
-        df_plot = df_plot[~df_plot['priceband'].isin(['NIL', 'NULL']) & (df_plot['discount'] > 0)]
-        df_plot = df_plot.groupby('priceband')['discount'].mean().reset_index().sort_values(by='discount', ascending=False)
-        qualitative.plot_and_insight(df_plot, 'priceband', "Price Band")
+        st.markdown("### 📊 Quantity Sold vs Avg. Making Charges by Discount Bucket")
 
-    import multivariate as multivariate
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        # Create discount buckets
+        df['discount_bucket'] = pd.cut(
+            df['discount'],
+            bins=[-1, 5, 10, 15, 20, 25, 30, 50, 100],
+            labels=['0–5%', '5–10%', '10–15%', '15–20%', '20–25%', '25–30%', '30–50%', '50–100%']
+        )
+
+        # Aggregate data
+        grouped = df.groupby('discount_bucket').agg({
+            'qty': 'sum',
+            'mc': 'mean'
+        }).reset_index()
+
+        # Set discount bucket order
+        ordered_cats = ['0–5%', '5–10%', '10–15%', '15–20%', '20–25%', '25–30%', '30–50%', '50–100%']
+        grouped['discount_bucket'] = pd.Categorical(grouped['discount_bucket'], categories=ordered_cats, ordered=True)
+        grouped = grouped.sort_values('discount_bucket')
+
+        # Plotting
+        x = np.arange(len(grouped))  # label locations
+        width = 0.35  # bar width
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        bars1 = ax.bar(x - width/2, grouped['qty'], width, label='Total Quantity Sold', color='mediumseagreen')
+        bars2 = ax.bar(x + width/2, grouped['mc'], width, label='Avg. Making Charges (₹)', color='cornflowerblue')
+
+        # Labels and formatting
+        ax.set_xlabel('Discount Bucket')
+        ax.set_ylabel('Value')
+        ax.set_title('Total Quantity vs Avg. Making Charges by Discount Bucket')
+        ax.set_xticks(x)
+        ax.set_xticklabels(grouped['discount_bucket'])
+        ax.legend()
+        ax.grid(axis='y', linestyle='--', alpha=0.5)
+
+        # Add labels on bars
+        for bar in bars1:
+            ax.annotate(f'{int(bar.get_height())}',
+                        xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                        xytext=(0, 4),
+                        textcoords="offset points",
+                        ha='center', va='bottom', fontsize=8)
+
+        for bar in bars2:
+            ax.annotate(f'{int(bar.get_height())}',
+                        xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                        xytext=(0, 4),
+                        textcoords="offset points",
+                        ha='center', va='bottom', fontsize=8)
+
+        st.pyplot(fig)
 
 # ...
 # --- Multivariate Analysis ---
@@ -235,7 +289,10 @@ elif analysis_type == "Multivariate Analysis":
         "Plot 4": "4.Discount vs Day and Gold Price",
         "Plot 5": "5.Correlation of Discounts with Numeric Variables",
         "Plot 6": "6.Top 50 Customers by Avg Discount",
-        "Plot 7": "7.Avg Discount by Region, Brand"
+        "Plot 7": "7.Avg Discount by Region, Brand",
+        "Plot 8": "8. Avg Discount by Brand, Level & Discount",
+        "Plot 9": "9. Region vs Brand: Avg Discount per Transaction",
+        "Plot 10": "10. Avg Disc"
     }
 
     multivariate_plot_keys = list(multivariate_plot_labels.keys())
@@ -250,14 +307,18 @@ elif analysis_type == "Time Series Analysis":
     plot_options = [
         "1.Daily Average idisc",
         "2.Daily Trend of obdisc and ghsdisc",
-        "3.Average Discount % by Day of Week"
+        "3.Average Discount % by Day of Week",
+        "4.Daily Trend Of Brand",
+        "5.Returned Items Trend"
     ]
     selected_plot = st.selectbox("Select a Time Series Plot", plot_options)
 
     plot_mapping = {
         "1.Daily Average idisc": "Plot 1",
         "2.Daily Trend of obdisc and ghsdisc": "Plot 2",
-        "3.Average Discount % by Day of Week": "Plot 3"
+        "3.Average Discount % by Day of Week": "Plot 3",
+        "4.Daily Trend Of Brand": "Plot 4",
+        "5.Returned Items Trend": "Plot 5"
     }
 
     timeseries.plot_and_insight(df, plot_mapping[selected_plot], "Time Series")
