@@ -27,7 +27,6 @@ def load_data():
         df = pd.read_excel(io.BytesIO(response.content), engine="openpyxl")
 
         st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
-        st.write("Columns found in dataset:", df.columns.tolist())  # Debug column names
 
         return df
 
