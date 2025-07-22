@@ -19,10 +19,10 @@ with open("gold.png", "rb") as f:
 # Display the title in one line
 st.markdown(
     f"""
-    <div style="text-align: center; margin-bottom: 30px;">
-        <div style="display: inline-flex; align-items: center; gap: 15px; max-width: 100%; flex-wrap: nowrap;">
-            <img src="data:image/png;base64,{encoded}" width="50" />
-            <span style="font-size: 2.4rem; font-weight: bold; white-space: normal;">Jewellery Discount Analysis Dashboard</span>
+    <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 30px;">
+        <div style="display: flex; align-items: center; gap: 15px; white-space: nowrap; overflow: hidden;">
+            <img src="data:image/png;base64,{encoded}" width="50"/>
+            <span style="font-size: 2.2rem; font-weight: bold;">Jewellery Discount Analysis Dashboard</span>
         </div>
     </div>
     """,
