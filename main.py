@@ -33,32 +33,32 @@ st.markdown(
 @st.cache_data
 def load_data():
     try:
-        url = st.secrets["onedrive"]["download_url"]
-        response = requests.get(url)
+        # Load OneDrive shared link from secrets
+        onedrive_url = st.secrets["onedrive"]["download_url"]
+
+        # Make request with redirect enabled
+        response = requests.get(onedrive_url, allow_redirects=True)
         response.raise_for_status()
 
+        # Check Content-Type (optional, just informative)
         content_type = response.headers.get("Content-Type", "")
         st.info(f"Downloaded content type: {content_type}")
 
-        if "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" not in content_type:
-            raise ValueError("Downloaded content is not an Excel file")
-
+        # Read Excel content from response
         df = pd.read_excel(io.BytesIO(response.content))
-        st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+        st.success(f"✅ Data loaded: {df.shape[0]} rows × {df.shape[1]} columns")
         return df
 
     except Exception as e:
-        st.error(f"Failed to load data: {e}")
+        st.error(f"❌ Failed to load data: {e}")
         return pd.DataFrame()
 
-# ✅ Call the function here, outside the definition
+# ✅ Call the function and handle fallback
 df = load_data()
 
-# ✅ Safe fallback if data didn't load
-if df is None or df.empty:
-    st.error("❌ Data failed to load.")
+if df.empty:
+    st.error("⚠️ Data is empty or failed to load.")
     st.stop()
-
 
 # Dropdown 1: Select Analysis Type
 analysis_type = st.selectbox(
