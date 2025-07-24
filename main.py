@@ -37,11 +37,13 @@ def load_data():
         response = requests.get(url)
         response.raise_for_status()
 
-        # Optional: Check if content-type is Excel
-        if "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" not in response.headers.get("Content-Type", ""):
-            raise ValueError("Downloaded content is not an Excel file.")
+        content_type = response.headers.get("Content-Type", "")
+        st.info(f"Downloaded content type: {content_type}")
 
-        df = pd.read_excel(io.BytesIO(response.content))  # No engine specified
+        if "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" not in content_type:
+            raise ValueError("Downloaded content is not an Excel file")
+
+        df = pd.read_excel(io.BytesIO(response.content))  # auto-detect engine
         st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
         return df
 
