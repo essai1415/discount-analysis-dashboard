@@ -30,22 +30,30 @@ st.markdown(
 )
 
 # Load data
+import streamlit as st
+import pandas as pd
+import requests
+import base64
+import io
+
 @st.cache_data
 def load_data():
     try:
-        # Get the OneDrive direct download URL from secrets
-        url = st.secrets["onedrive"]["download_url"]
-        response = requests.get(url)
+        # 🔗 Share link (replace with your own or use st.secrets["onedrive"]["share_url"])
+        share_url = "https://1drv.ms/x/c/6aed537a04b5f38c/EaDH-Q9DhU5At9UfThoHdeoB5KCn5zmYfXlGfaX9u1pmug?e=hFvTIP"
+
+        # 🔒 Encode the URL (OneDrive API trick)
+        b64 = base64.b64encode(share_url.encode()).decode()
+        b64_mod = b64.rstrip("=").replace("/", "_").replace("+", "-")
+
+        # 🔽 Generate direct content URL
+        api_url = f"https://api.onedrive.com/v1.0/shares/u!{b64_mod}/root/content"
+
+        # 📥 Download the file
+        response = requests.get(api_url, allow_redirects=True)
         response.raise_for_status()
 
-        content_type = response.headers.get("Content-Type", "")
-        st.info(f"📦 Content-Type: {content_type}")
-
-        # Check if file is a valid Excel file
-        if "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" not in content_type:
-            raise ValueError("Downloaded file is not an Excel file.")
-
-        # Read the Excel file into a DataFrame
+        # 📊 Read into a DataFrame
         df = pd.read_excel(io.BytesIO(response.content))
         st.success(f"✅ Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
         return df
@@ -54,16 +62,17 @@ def load_data():
         st.error(f"❌ Failed to load data: {e}")
         return pd.DataFrame()
 
-# ✅ Call the function
+# 🔽 Call the function
 df = load_data()
 
-# ✅ Validate and stop if empty
+# 🧪 Stop if nothing loaded
 if df.empty:
     st.warning("⚠️ Data is empty or failed to load.")
     st.stop()
 
-# 🔽 Continue with your app
+# 📄 Show data
 st.dataframe(df.head())
+
 
 # Dropdown 1: Select Analysis Type
 analysis_type = st.selectbox(
