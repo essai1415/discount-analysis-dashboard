@@ -33,17 +33,19 @@ st.markdown(
 @st.cache_data
 def load_data():
     try:
+        # Get the OneDrive direct download URL from secrets
         url = st.secrets["onedrive"]["download_url"]
         response = requests.get(url)
         response.raise_for_status()
 
         content_type = response.headers.get("Content-Type", "")
-        st.info(f"Content-Type: {content_type}")
+        st.info(f"📦 Content-Type: {content_type}")
 
-        # Load Excel file only if correct content type
+        # Check if file is a valid Excel file
         if "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" not in content_type:
             raise ValueError("Downloaded file is not an Excel file.")
 
+        # Read the Excel file into a DataFrame
         df = pd.read_excel(io.BytesIO(response.content))
         st.success(f"✅ Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
         return df
@@ -60,7 +62,7 @@ if df.empty:
     st.warning("⚠️ Data is empty or failed to load.")
     st.stop()
 
-# 🔽 Now continue with your analysis/dashboard...
+# 🔽 Continue with your app
 st.dataframe(df.head())
 
 # Dropdown 1: Select Analysis Type
