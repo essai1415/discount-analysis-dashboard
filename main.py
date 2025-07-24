@@ -40,7 +40,7 @@ import io
 def load_data():
     try:
         # 🔗 Share link (replace with your own or use st.secrets["onedrive"]["share_url"])
-        share_url = "https://1drv.ms/x/c/6aed537a04b5f38c/EaDH-Q9DhU5At9UfThoHdeoB5KCn5zmYfXlGfaX9u1pmug?e=hFvTIP"
+        share_url = "https://1drv.ms/x/c/6aed537a04b5f38c/EaDH-Q9DhU5At9UfThoHdeoBT9U_X5r3VVNdbTfScG5HOQ?e=Kgejin&nav=MTVfezQyMDI5Rjk4LTk1QUItNEVDNS04NzFDLTA3QzFCMDRFOUJDMX0"
 
         # 🔒 Encode the URL (OneDrive API trick)
         b64 = base64.b64encode(share_url.encode()).decode()
