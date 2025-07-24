@@ -51,6 +51,14 @@ def load_data():
         st.error(f"Failed to load data: {e}")
         return pd.DataFrame()
 
+# ✅ Call the function here, outside the definition
+df = load_data()
+
+# ✅ Safe fallback if data didn't load
+if df is None or df.empty:
+    st.error("❌ Data failed to load.")
+    st.stop()
+
 
 # Dropdown 1: Select Analysis Type
 analysis_type = st.selectbox(
