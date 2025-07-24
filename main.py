@@ -33,9 +33,8 @@ st.markdown(
 @st.cache_data
 def load_data():
     try:
-        # Get file ID securely
-        file_id = st.secrets["gdrive"]["file_id"]
-        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        # Get download URL securely from secrets
+        url = st.secrets["onedrive"]["download_url"]
 
         # Download and read Excel file using openpyxl engine
         response = requests.get(url)
@@ -44,7 +43,6 @@ def load_data():
         df = pd.read_excel(io.BytesIO(response.content), engine="openpyxl")
 
         st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
-
         return df
 
     except Exception as e:
