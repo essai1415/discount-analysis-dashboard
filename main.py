@@ -30,12 +30,6 @@ st.markdown(
 )
 
 # Load data
-import streamlit as st
-import pandas as pd
-import requests
-import base64
-import io
-
 @st.cache_data
 def load_data():
     try:
