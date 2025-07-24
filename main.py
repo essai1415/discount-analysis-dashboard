@@ -33,23 +33,21 @@ st.markdown(
 @st.cache_data
 def load_data():
     try:
-        # Get download URL securely from secrets
         url = st.secrets["onedrive"]["download_url"]
-
-        # Download and read Excel file using openpyxl engine
         response = requests.get(url)
         response.raise_for_status()
 
-        df = pd.read_excel(io.BytesIO(response.content), engine="openpyxl")
+        # Optional: Check if content-type is Excel
+        if "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" not in response.headers.get("Content-Type", ""):
+            raise ValueError("Downloaded content is not an Excel file.")
 
+        df = pd.read_excel(io.BytesIO(response.content))  # No engine specified
         st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
         return df
 
     except Exception as e:
         st.error(f"Failed to load data: {e}")
         return pd.DataFrame()
-
-df = load_data()
 
 # Dropdown 1: Select Analysis Type
 analysis_type = st.selectbox(
