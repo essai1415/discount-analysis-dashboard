@@ -43,13 +43,14 @@ def load_data():
         if "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" not in content_type:
             raise ValueError("Downloaded content is not an Excel file")
 
-        df = pd.read_excel(io.BytesIO(response.content))  # auto-detect engine
+        df = pd.read_excel(io.BytesIO(response.content))
         st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
         return df
 
     except Exception as e:
         st.error(f"Failed to load data: {e}")
         return pd.DataFrame()
+
 
 # Dropdown 1: Select Analysis Type
 analysis_type = st.selectbox(
