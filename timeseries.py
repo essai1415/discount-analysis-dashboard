@@ -331,7 +331,6 @@ def plot_and_insight(df, plot_key, plot_label):
 
             summary_df = pd.DataFrame(summary_data)
 
-            st.write("**Key Insights from obdisc & ghsdisc (daily averages as % of bill value)**")
             st.dataframe(summary_df, use_container_width=True)
 
 
