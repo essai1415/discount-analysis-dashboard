@@ -529,7 +529,18 @@ def plot_and_insight(df, plot_key, plot_label):
                 st.write(" **Returns by Day of Month (Filtered)**")
                 st.dataframe(filtered_df, use_container_width=True)
 
-        st.markdown("---")
-        st.markdown("### Insights for Business Stakeholders")
-        for insight in predefined_insights.get(plot_key, ["No predefined insights available."]):
+    # --- Toggle Logic for Insights ---
+    toggle_key = f"show_insights_{x_col}"
+    if toggle_key not in st.session_state:
+        st.session_state[toggle_key] = False
+
+    def toggle():
+        st.session_state[toggle_key] = not st.session_state[toggle_key]
+
+    button_label = "Hide Detailed Business Insights" if st.session_state[toggle_key] else "Show Detailed Business Insights"
+    st.button(button_label, key=f"toggle_button_{x_col}", on_click=toggle)
+
+    if st.session_state[toggle_key]:
+        st.markdown("### Business Insights For Stakeholders")
+        for insight in predefined_insights.get(x_col, [f"No insights available for {x_label}."]):
             st.markdown(f"- {insight}")
