@@ -48,21 +48,17 @@ predefined_insights = {
         "Customer 2349 (DIA) got the highest single discount of ₹5.26L over only 5 transactions, spending ₹48.2L, may need manual review.",
         "Customers like 89042 and 91004 bought only 6 times but spent over ₹18.9L and ₹15.1L, showing they are big spenders who buy rarely and should be personally followed up."
     ],
-    "Plot 7": [
-        "Zoya  in WEST 3 gives the highest average discount (12.14%) with just 9 transactions totaling ₹77.96L, pointing to a small but highly discounted customer group.",
-        "Tanishq in NORTH 1 leads with ₹13.16Cr in sales across 1000 transactions, showing strong reach with moderate 6.86% discounts.",
-        "South 2 region saw the second highest contribution of Tanishq, totaling ₹9.2 Cr over 683 transactions, with a 6.32% average discount.",
-        "Zoya achieved the highest average discount of 12.14% in West 3, though from only 9 transactions, generating ₹77.95 Lakhs.",
-        "Mia's strongest performance was in South 3, with ₹44L from 109 transactions and an average discount of 7.64%."
-        "Tanishq in West 3 led in both volume (774 transactions) and value (₹9.08 Cr) despite offering a moderate average discount of 7.12%."
-    ],
     "Plot 8":["Tanishq at L2 generates the highest value (₹55.8 Cr) with a low discount rate (2.11%), indicating strong pricing power at scale.",
               "Zoya at L1 gives the highest average discount (10.10%) despite only 43 transactions, suggesting potential over-discounting.",
               "Ecom at L1 has a small contribution (₹44.8 Lakhs from 102 transactions) but a high discount rate (5.59%), hinting at inefficiency or low-margin sales.",
               "Mia across L1 and L2 yields ₹4.9 Cr from 1,652 transactions with moderate discounts (3.67–4.87%), showing consistent but mid-level performance.",
               "Tanish at L1 drives ₹32.4 Cr from 2,425 transactions at a 6.10% discount, highlighting volume-led sales possibly supported by promotional pricing."
               ],
-    "Plot 9":[]
+    "Plot 9":["Zoya consistently offers the highest discounts across regions, peaking at 12.18% in South 3, indicating a more aggressive pricing strategy",
+              "Mia maintains a stable discount range (5.77%–7.35%), reflecting a controlled and uniform pricing approach across regions.",
+              "South and North regions have the biggest gap in discounts, for example, South ranges from 5.84% (Tanishq in South 1) to 12.18% (Zoya in South 3), a difference of 6.34%.",
+              "The East region gives the lowest discounts overall, Mia is at 5.77% and Tanishq at 5.84%, lower than other regions like South or West.",
+              "South 3 is the most discount-heavy area, with Mia at 6.74%, Tanishq at 6.2%, and Zoya at 12.18%."]
 }
 
 # Dropdown-style plotting function
@@ -242,40 +238,6 @@ def plot_and_insight(df, plot_key, plot_label):
             st.pyplot(fig)
             plt.clf()
 
-
-        elif plot_key == "Plot 7":
-            # Drop missing or invalid rows
-            df_clean = df.dropna(subset=['region', 'brand', 'totcategory', 'discount', 'value'])
-            df_clean = df_clean[(df_clean['discount'] > 0) & (df_clean['value'] > 0)]
-
-            # Standardize region and brand names
-            df_clean['region'] = df_clean['region'].str.strip().str.upper()
-            df_clean['brand'] = df_clean['brand'].str.strip().str.upper()
-
-            # Remove ECOM brand
-            df_clean = df_clean[df_clean['brand'] != 'ECOM']
-
-            # Calculate discount percentage
-            df_clean['discount_percent'] = (df_clean['discount'] / df_clean['value']) * 100
-
-            # Group by Region, Brand, and Totcategory
-            grouped = df_clean.groupby(['region', 'brand', 'totcategory'])['discount_percent'].mean().reset_index()
-            grouped['discount_percent'] = grouped['discount_percent'].round(2)
-
-            # Plot
-            plt.figure(figsize=(14, 6))
-            sns.barplot(data=grouped, x='region', y='discount_percent', hue='brand')
-            plt.title("Average Discount (%) by Region and Brand (Excluding ECOM)")
-            plt.ylabel("Average Discount (%)")
-            plt.xlabel("Region")
-            plt.xticks(rotation=0)
-            plt.grid(True)
-            plt.tight_layout()
-
-            fig = plt.gcf()
-            st.pyplot(fig)
-            plt.clf()
-
         elif plot_key == "Plot 8":
     # Calculate discount percent for each transaction
             df['discount_percent'] = (df['discount'] / df['value']) * 100
@@ -366,7 +328,6 @@ def plot_and_insight(df, plot_key, plot_label):
             region_order_top = grouped_top.groupby('region')['discount_percent'].mean().sort_values(ascending=False).index.tolist()
             grouped_top['region'] = pd.Categorical(grouped_top['region'], categories=region_order_top, ordered=True)
 
-            st.subheader("Top 6 Regions vs Top 5 Brands – Avg Discount % per Transaction")
             fig1, ax1 = plt.subplots(figsize=(14, 8))
             sns.set_theme(style="whitegrid")
             sns.barplot(
@@ -394,7 +355,7 @@ def plot_and_insight(df, plot_key, plot_label):
                             color='black'
                         )
 
-            ax1.set_title("Top 6 Regions – Avg Discount % per Transaction to Top 5 Brands (incl. ECOM)", fontsize=16, weight='bold')
+            ax1.set_title("Avg discount % per transaction to first 6 regions", fontsize=16, weight='bold')
             ax1.set_xlabel("Region", fontsize=13)
             ax1.set_ylabel("Avg Discount per Transaction (%)", fontsize=13)
             ax1.tick_params(axis='x', labelsize=11)
@@ -410,7 +371,6 @@ def plot_and_insight(df, plot_key, plot_label):
             region_order_remain = grouped_remain.groupby('region')['discount_percent'].mean().sort_values(ascending=False).index.tolist()
             grouped_remain['region'] = pd.Categorical(grouped_remain['region'], categories=region_order_remain, ordered=True)
 
-            st.subheader("Remaining Regions vs Top 5 Brands – Avg Discount % per Transaction")
             fig2, ax2 = plt.subplots(figsize=(14, 8))
             sns.barplot(
                 data=grouped_remain,
@@ -437,7 +397,7 @@ def plot_and_insight(df, plot_key, plot_label):
                             color='black'
                         )
 
-            ax2.set_title("Remaining Regions – Avg Discount % per Transaction to Top 5 Brands (incl. ECOM)", fontsize=16, weight='bold')
+            ax2.set_title("Avg discount % per transaction to rest of the regions", fontsize=16, weight='bold')
             ax2.set_xlabel("Region", fontsize=13)
             ax2.set_ylabel("Avg Discount per Transaction (%)", fontsize=13)
             ax2.tick_params(axis='x', labelsize=11, rotation=30)
