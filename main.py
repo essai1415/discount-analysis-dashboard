@@ -257,15 +257,14 @@ elif analysis_type == "Qualitative Analysis":
 elif analysis_type == "Multivariate Analysis":
 
     multivariate_plot_labels = {
-        "Plot 1": "1.Top 20 Discounts by Location",
-        "Plot 2": "2.Return Rate: With vs Without Discount",
-        "Plot 3": "3.Average Discount for New vs Existing Customers",
-        "Plot 4": "4.Discount vs Day and Gold Price",
-        "Plot 5": "5.Correlation of Discounts with Numeric Variables",
-        "Plot 6": "6.Top 50 Customers by Avg Discount",
-        "Plot 7": "7.Avg Discount by Region, Brand",
-        "Plot 8": "8. Avg Discount by Brand, Level & Discount",
-        "Plot 9": "9. Region vs Brand: Avg Discount per Transaction"
+        "Plot 1": "1. Top 20 Discounts by Location",
+        "Plot 2": "2. Return Rate: With vs Without Discount",
+        "Plot 3": "3. Average Discount for New vs Existing Customers",
+        "Plot 4": "4. Discount vs Day and Gold Price",
+        "Plot 5": "5. Correlation of Discounts with Numeric Variables",
+        "Plot 6": "6. Top 50 Customers by Avg Discount",
+        "Plot 8": "7. Avg Discount by Brand, Level & Discount",
+        "Plot 9": "8. Region vs Brand: Avg Discount per Transaction"
     }
 
     multivariate_plot_keys = list(multivariate_plot_labels.keys())
