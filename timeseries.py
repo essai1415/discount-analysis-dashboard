@@ -54,13 +54,22 @@ def plot_and_insight(df, plot_key, plot_label):
         df['day'] = df['docdate'].dt.day
 
         if plot_key == "Plot 1":
-            st.subheader("Daily Average idisc (1-Month View)")
-            df_idisc = df.dropna(subset=['idisc'])
-            df_idisc = df_idisc[df_idisc['idisc'] > 0]
-            daily_avg = df_idisc.groupby('day')['idisc'].mean().reset_index()
+            st.subheader("Daily Average idisc % (1-Month View)")
+
+            # Step 1: Drop rows where idisc or value is missing or invalid
+            df_idisc = df.dropna(subset=['idisc', 'value'])
+            df_idisc = df_idisc[(df_idisc['idisc'] > 0) & (df_idisc['value'] > 0)]
+
+            # Step 2: Calculate discount percentage
+            df_idisc['idisc_pct'] = (df_idisc['idisc'] / df_idisc['value']) * 100
+
+            # Step 3: Group by day and compute average discount %
+            daily_avg = df_idisc.groupby('day')['idisc_pct'].mean().reset_index()
+
+            # Step 4: Plot
             plt.figure(figsize=(12, 5))
-            sns.lineplot(data=daily_avg, x='day', y='idisc', marker='o', color='teal')
-            plt.title("Daily Average idisc (1-Month View)")
+            sns.lineplot(data=daily_avg, x='day', y='idisc_pct', marker='o', color='teal')
+            plt.title("Daily Average idisc % (1-Month View)")
             plt.xlabel("Day of the Month")
             plt.ylabel("Average idisc (%)")
             plt.xticks(range(1, 32))
@@ -70,21 +79,41 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
 
         elif plot_key == "Plot 2":
-            st.subheader("Daily Trend of OBDISC and GHSDISC")
-            idisc_cols = ['obdisc', 'ghsdisc']
-            df2 = df.dropna(subset=idisc_cols)
-            daily_avg2 = df2.groupby('day')[idisc_cols].mean().reset_index()
-            df_melted = daily_avg2.melt(id_vars='day', var_name='idisc_type', value_name='average_idisc')
-            plt.figure(figsize=(12, 5))
-            sns.lineplot(data=df_melted, x='day', y='average_idisc', hue='idisc_type', marker='o', palette='Dark2')
-            plt.title("Daily Trend of OBDISC and GHSDISC")
-            plt.xlabel("Day of Month")
-            plt.ylabel("Average idisc (%)")
-            plt.xticks(range(1, 32))
-            plt.grid(True)
-            plt.tight_layout()
-            st.pyplot(plt.gcf())
-            plt.clf()
+                st.subheader("Daily Trend of OBDISC and GHSDISC (as % of Bill Value)")
+
+                idisc_cols = ['obdisc', 'ghsdisc']
+                df2 = df.dropna(subset=idisc_cols + ['value'])
+                df2 = df2[df2['value'] > 0]  # Avoid divide-by-zero
+
+                # Convert to percentage
+                df2['obdisc_pct'] = (df2['obdisc'] / df2['value']) * 100
+                df2['ghsdisc_pct'] = (df2['ghsdisc'] / df2['value']) * 100
+
+                # Remove negative values
+                df2 = df2[(df2['obdisc_pct'] >= 0) & (df2['ghsdisc_pct'] >= 0)]
+
+                # Extract day
+                df2['day'] = df2['docdate'].dt.day
+
+                # Group and average
+                daily_avg2 = df2.groupby('day')[['obdisc_pct', 'ghsdisc_pct']].mean().reset_index()
+
+                # Melt for plotting
+                df_melted = daily_avg2.melt(id_vars='day', var_name='idisc_type', value_name='average_discount_pct')
+
+                # Plot
+                plt.figure(figsize=(14, 6))
+                sns.lineplot(data=df_melted, x='day', y='average_discount_pct', hue='idisc_type', marker='o', palette='Dark2')
+                plt.title("Daily Trend of OBDISC and GHSDISC (%)")
+                plt.xlabel("Day of Month")
+                plt.ylabel("Average Discount (%)")
+                plt.xticks(range(1, 32))
+                plt.grid(True)
+                plt.tight_layout()
+                st.pyplot(plt.gcf())
+                plt.clf()
+
+
 
         elif plot_key == "Plot 3":
             st.subheader("Average Discount % by Day of Week")
@@ -113,34 +142,43 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
         
         elif plot_key == "Plot 4":
-            st.subheader("Daily Discount Trend: Tanishq vs Mia, Zoya & Ecom")
+            st.subheader("Daily Discount Trend (%): Tanishq vs Mia, Zoya & Ecom")
 
             df['docdate'] = pd.to_datetime(df['docdate'])
             df['brand'] = df['brand'].str.upper()
             df['day'] = df['docdate'].dt.day
 
+            df_valid = df[(df['discount'] > 0) & (df['value'] > 0)].copy()
+            df_valid['discount_pct'] = (df_valid['discount'] / df_valid['value']) * 100
+
+            # Remove outliers: Keep only 0–100%
+            df_valid = df_valid[df_valid['discount_pct'] <= 100]
+
+
             # --- Tanishq
-            df_tanishq = df[(df['discount'] > 0) & (df['brand'] == 'TANISHQ')]
-            daily_discount_tanishq = df_tanishq.groupby(['day'])['discount'].sum().reset_index()
+            df_tanishq = df_valid[df_valid['brand'] == 'TANISHQ']
+            daily_discount_tanishq = df_tanishq.groupby('day')['discount_pct'].mean().reset_index()
 
             # --- Other Brands
-            df_other = df[(df['discount'] > 0) & (df['brand'] != 'TANISHQ')]
-            daily_discount_other = df_other.groupby(['day', 'brand'])['discount'].sum().reset_index()
+            df_other = df_valid[df_valid['brand'] != 'TANISHQ']
+            daily_discount_other = df_other.groupby(['day', 'brand'])['discount_pct'].mean().reset_index()
 
             # --- Plotting both subplots
             fig, axs = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
 
             # Tanishq plot
-            sns.lineplot(data=daily_discount_tanishq, x='day', y='discount', marker='o', color='goldenrod', ax=axs[0])
-            axs[0].set_title("Tanishq - Daily Discount Trend")
-            axs[0].set_ylabel("Total Discount")
+            sns.lineplot(data=daily_discount_tanishq, x='day', y='discount_pct',
+                        marker='o', color='goldenrod', ax=axs[0])
+            axs[0].set_title("Tanishq - Daily Avg Discount (%)")
+            axs[0].set_ylabel("Avg Discount (%)")
             axs[0].grid(True)
 
             # Other Brands plot
-            sns.lineplot(data=daily_discount_other, x='day', y='discount', hue='brand', marker='o', palette='tab10', ax=axs[1])
-            axs[1].set_title("Mia, Zoya & Ecom - Daily Discount Trend")
+            sns.lineplot(data=daily_discount_other, x='day', y='discount_pct', hue='brand',
+                        marker='o', palette='tab10', ax=axs[1])
+            axs[1].set_title("Mia, Zoya & Ecom - Daily Avg Discount (%)")
             axs[1].set_xlabel("Day of Month")
-            axs[1].set_ylabel("Total Discount")
+            axs[1].set_ylabel("Avg Discount (%)")
             axs[1].grid(True)
 
             # Common x-ticks
@@ -149,6 +187,8 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.tight_layout()
             st.pyplot(fig)
             plt.clf()
+
+
         
         elif plot_key == "Plot 5":
             st.subheader(" Daily Returned Transactions (Day 1–31)")
@@ -183,67 +223,89 @@ def plot_and_insight(df, plot_key, plot_label):
             st.pyplot(plt.gcf())
             plt.clf()
 
-
-
-        st.markdown("###  Summary Table")
+#SUMMARY TABLE
 
         if plot_key == "Plot 1":
-            st.markdown("###  Actionable Insights from Item-Level Discounts")
 
-            df_idisc = df.dropna(subset=['idisc'])
-            df_idisc = df_idisc[df_idisc['idisc'] > 0]
+            df_idisc = df.dropna(subset=['idisc', 'value'])
+            df_idisc = df_idisc[(df_idisc['idisc'] > 0) & (df_idisc['value'] > 0)]
+
+            # Calculate idisc as %
+            df_idisc['idisc_pct'] = (df_idisc['idisc'] / df_idisc['value']) * 100
+
+            # Clean fields
             df_idisc['day'] = df_idisc['docdate'].dt.day
             df_idisc['brand'] = df_idisc['brand'].str.upper()
             df_idisc['region'] = df_idisc['region'].str.upper()
 
-            # Match plot logic — use average idisc (not sum)
-            daily_avg = df_idisc.groupby('day')['idisc'].mean()
-
+            # Group-level summaries
+            daily_avg = df_idisc.groupby('day')['idisc_pct'].mean()
             top_discount_day = daily_avg.idxmax()
             peak_discount_value = daily_avg.max()
 
-            brand_avg = df_idisc.groupby('brand')['idisc'].mean()
+            brand_avg = df_idisc.groupby('brand')['idisc_pct'].mean()
             most_discounted_brand = brand_avg.idxmax()
             brand_discount_value = brand_avg.max()
 
-            region_avg = df_idisc.groupby('region')['idisc'].mean()
+            region_avg = df_idisc.groupby('region')['idisc_pct'].mean()
             underperforming_region = region_avg.idxmin()
             underperforming_region_val = region_avg.min()
 
-            high_discount_day = df_idisc[df_idisc['idisc'] > 10]['day'].value_counts().idxmax()
+            high_discount_days = df_idisc[df_idisc['idisc_pct'] > 10]['day'].value_counts()
+            most_frequent_high_discount_day = high_discount_days.idxmax()
+            total_high_discount_days = high_discount_days.count()
 
+            total_bills = df_idisc.shape[0]
+
+            # Summary table
             summary_data = {
                 "Insight Area": [
-                    " Peak Discount Day",
-                    " Most Discounted Brand",
-                    " Region with Least Discount Focus",
-                    " Most Frequent High Discount Day (10%>)"
+                    "Peak Discount Day",
+                    "Peak Discount % on That Day",
+                    "Most Discounted Brand",
+                    "Avg Discount % for That Brand",
+                    "Region with Least Discount Focus",
+                    "Avg Discount % in That Region",
+                    "Most Frequent High Discount Day (10% >)",
+                    "Total Days with High Discounts (10% >)",
                 ],
                 "Value": [
                     int(top_discount_day),
+                    f"{peak_discount_value:.2f}%",
                     most_discounted_brand,
+                    f"{brand_discount_value:.2f}%",
                     underperforming_region,
-                    int(high_discount_day)
+                    f"{underperforming_region_val:.2f}%",
+                    int(most_frequent_high_discount_day),
+                    int(total_high_discount_days)
                 ]
             }
 
+            st.markdown("### Discount Summary Insights (Based on idisc %)")
             st.dataframe(pd.DataFrame(summary_data), use_container_width=True)
 
 
         elif plot_key == "Plot 2":
-            st.markdown("###  Summary of OBDISC and GHSDISC Trends by Day")
+            st.markdown("### Summary of OBDISC and GHSDISC Trends by Day (as % of Bill Value)")
 
-            # Keep only rows where both discounts exist
             idisc_cols = ['obdisc', 'ghsdisc']
-            df2 = df.dropna(subset=idisc_cols)
-            df2 = df2[(df2['obdisc'] > 0) & (df2['ghsdisc'] > 0)].copy()
+            df2 = df.dropna(subset=idisc_cols + ['value'])
+            df2 = df2[(df2['value'] > 0)]  # Avoid divide by zero
 
+            # Calculate percentages
+            df2['obdisc_pct'] = (df2['obdisc'] / df2['value']) * 100
+            df2['ghsdisc_pct'] = (df2['ghsdisc'] / df2['value']) * 100
 
-            # Group by day and calculate average OBDISC and GHSDISC
-            
-            daily_avg = df2.groupby('day')[idisc_cols].mean().reset_index()
+            # Remove negative values
+            df2 = df2[(df2['obdisc_pct'] >= 0) & (df2['ghsdisc_pct'] >= 0)]
 
-            # Build clear, human-readable summary
+            # Extract day
+            df2['day'] = df2['docdate'].dt.day
+
+            # Group by day
+            daily_avg = df2.groupby('day')[['obdisc_pct', 'ghsdisc_pct']].mean().reset_index()
+
+            # Build summary
             summary_data = {
                 "Discount Type": [],
                 "Average Discount (%)": [],
@@ -253,24 +315,25 @@ def plot_and_insight(df, plot_key, plot_label):
                 "Day with Lowest Avg Discount": []
             }
 
-            for col in idisc_cols:
-                avg_discount = daily_avg[col].mean()
-                max_discount = daily_avg[col].max()
-                min_discount = daily_avg[col].min()
+            for col in ['obdisc_pct', 'ghsdisc_pct']:
+                avg = daily_avg[col].mean()
+                max_val = daily_avg[col].max()
+                min_val = daily_avg[col].min()
                 max_day = daily_avg.loc[daily_avg[col].idxmax(), 'day']
                 min_day = daily_avg.loc[daily_avg[col].idxmin(), 'day']
 
-                summary_data["Discount Type"].append("OBDISC" if col == "obdisc" else "GHSDISC")
-                summary_data["Average Discount (%)"].append(f"{avg_discount:.2f}")
-                summary_data["Highest Daily Average (%)"].append(f"{max_discount:.2f}")
-                summary_data["Lowest Daily Average (%)"].append(f"{min_discount:.2f}")
+                summary_data["Discount Type"].append("OBDISC" if "obdisc" in col else "GHSDISC")
+                summary_data["Average Discount (%)"].append(f"{avg:.2f}")
+                summary_data["Highest Daily Average (%)"].append(f"{max_val:.2f}")
+                summary_data["Lowest Daily Average (%)"].append(f"{min_val:.2f}")
                 summary_data["Day with Highest Avg Discount"].append(int(max_day))
                 summary_data["Day with Lowest Avg Discount"].append(int(min_day))
 
             summary_df = pd.DataFrame(summary_data)
 
-            st.write(" **Key Insights from OBDISC and GHSDISC (Daily Averages)**")
+            st.write("**Key Insights from OBDISC and GHSDISC (Daily Averages as % of Bill Value)**")
             st.dataframe(summary_df, use_container_width=True)
+
 
         elif plot_key == "Plot 3":
 
@@ -321,17 +384,23 @@ def plot_and_insight(df, plot_key, plot_label):
         elif plot_key == "Plot 4":
             st.markdown("###  Discount Summary")
 
-            # Filter: Include discount >= 0
+            # Always define this at the beginning
             df_filtered = df[df['discount'] >= 0].copy()
             df_filtered['day'] = df_filtered['docdate'].dt.day
             df_filtered['brand'] = df_filtered['brand'].str.upper()
 
-            # User selects summary view
+            # Separate unfiltered version for customer count
+            df_customers = df.copy()
+            df_customers['day'] = df_customers['docdate'].dt.day
+            df_customers['brand'] = df_customers['brand'].str.upper()
+
+            # Now start your logic
             summary_type = st.radio(
                 "Choose Summary Type:",
                 ["Per Brand per Day", "Total per Day (All Brands)"],
                 horizontal=True
             )
+
 
             summary = None
 
@@ -353,8 +422,10 @@ def plot_and_insight(df, plot_key, plot_label):
                         total_value=('value', 'sum'),
                         total_qty=('qty', 'sum'),
                         transactions=('docdate', 'count'),
-                        unique_customers=('customerno', pd.Series.nunique)
+                        total_customers=('customerno', 'count'),  # All transactions (not unique)
+                        unique_customers=('customerno', pd.Series.nunique)  # Unique customer count
                     ).reset_index()
+
                 else:
                     st.info("Please select at least one brand to view the summary.")
 
@@ -369,16 +440,15 @@ def plot_and_insight(df, plot_key, plot_label):
                     unique_customers=('customerno', pd.Series.nunique)
                 ).reset_index()
 
-            # Proceed only if summary is available
+            # Step 3: Compute KPIs
             if summary is not None and not summary.empty:
-                # Add KPIs
                 summary['avg_discount_per_transaction'] = summary['total_discount'] / summary['transactions']
                 summary['avg_bill_value'] = summary['total_value'] / summary['transactions']
                 summary['discount_pct_of_value'] = (summary['total_discount'] / summary['total_value']) * 100
                 summary['avg_discount_per_unit'] = summary['total_discount'] / summary['total_qty']
 
                 summary = summary.round(2)
-                st.dataframe(summary)
+                st.dataframe(summary, use_container_width=True)
             else:
                 st.warning("No data to display.")
 
