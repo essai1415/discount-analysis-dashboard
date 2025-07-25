@@ -119,7 +119,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
             "Number Of Transactions": [43, 8203, 1652, 102],
             "Number Of Returns": [3, 349, 68, 0]
         })
-        st.markdown("### Brand-Wise Discount and Sales Summary")
+        st.markdown("### Brand Wise Discount and Sales Summary")
         st.dataframe(summary_df, use_container_width=True)
 
     elif x_col == "region":
@@ -161,7 +161,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
         summary_df["Total Discount"] = summary_df["Total Discount"].round(2)
 
         # Display in Streamlit
-        st.markdown("### Region-Wise Discount Summary")
+        st.markdown("### Region Wise Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
 
 
@@ -180,7 +180,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
             "Avg Discount per Transaction": [12069.21, 7167.66, 774.39],
             "Avg Bill Value": [128911.59, 81734.19, 71110.93]
         })
-        st.markdown("### Channel-Level Discount Summary")
+        st.markdown("### Channel Level Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
 
 
@@ -221,7 +221,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
             ]
         })
         
-        st.markdown("### Rcluster-Wise Discount Summary")
+        st.markdown("### Retail Cluster Wise Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
     
     elif x_col == "totcategory":
@@ -252,7 +252,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
 
         })
 
-        st.markdown("### Totcategory-Wise Discount Summary")
+        st.markdown("### Category Wise Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
 
     elif x_col == "amcb":
