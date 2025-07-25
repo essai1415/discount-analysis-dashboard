@@ -82,12 +82,11 @@ def show_facts_and_figures(df):
         "Cluster EC Bands": cleaned_unique_count(raw_df, 'clusterecband'),
         "Price Bands": cleaned_unique_count(raw_df, 'priceband'),
         "AMCB Bands": raw_df['amcb'].nunique(),
+        "Unique Customers": cleaned_unique_count(raw_df, 'customerno')
     }
 
     for key, value in facts.items():
         st.markdown(f"- **{key}:** {value}")
-
-
 
     # === Customer Insight ===
     st.markdown("###  **Core Transaction Insights & Data Gaps**", unsafe_allow_html=True)
@@ -252,4 +251,3 @@ def show_facts_and_figures(df):
     - Equips management with fact-based evidence to justify or revise discount structures.  
     - Enhances transparency and accountability across branches by surfacing outliers and inconsistencies.  
     """)
-
