@@ -18,9 +18,8 @@ predefined_insights = {
     ],
     "Plot 2": [
         "Comparing sales on days with high OBDISC vs GHSDISC can help decide which type of discount works better.",
-        "OBDISC changes a lot, with big jumps on days like 17, 21, and 25 — this may be due to special store offers or quick sales pushes.",
+        "OBDISC changes a lot, with big jumps on days like 1-4, 17, and 25 this may be due to special store offers or quick sales pushes.",
         "GHSDISC stays more steady, showing it’s part of a planned customer scheme.",
-        "On days like the 31st, both discounts rise together — this might be to boost end-of-month sales.",
         "GHSDISC builds long-term loyalty, while OBDISC helps with quick sales when needed."
     ],
     "Plot 3": [
