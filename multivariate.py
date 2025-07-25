@@ -450,12 +450,6 @@ def plot_and_insight(df, plot_key, plot_label):
             st.pyplot(fig2)
             plt.clf()
 
-
-
-
-
-
-
 # Summary Table
 
         if plot_key == "Plot 1":
@@ -637,7 +631,7 @@ def plot_and_insight(df, plot_key, plot_label):
                                     'Max_Discount', 'Transaction_Count', 'Total_Spend']])
 
         elif plot_key == "Plot 7":
-            st.markdown("### 🔍 Region-Brand Level Discount (%) Performance")
+            st.markdown("### Region-Brand Level Discount (%) Performance")
 
             # Clean and standardize fields
             df_clean['region'] = df_clean['region'].astype(str).str.strip().str.upper()
@@ -707,7 +701,7 @@ def plot_and_insight(df, plot_key, plot_label):
             # Rename columns for clarity
             summary_df.columns = ['Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)']
 
-            st.markdown("### Brand, Level Value, No of Transactions & Avg Discount % Summary")
+            st.markdown("### Summary table")
             st.dataframe(summary_df)
 
         elif plot_key == "Plot 9":
