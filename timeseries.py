@@ -530,7 +530,7 @@ def plot_and_insight(df, plot_key, plot_label):
                 st.dataframe(filtered_df, use_container_width=True)
 
     # --- Toggle Logic for Insights ---
-    toggle_key = f"show_insights_{plot_key}"
+    toggle_key = f"show_insights_{plot_key}"  # Use plot_key here
     if toggle_key not in st.session_state:
         st.session_state[toggle_key] = False
 
@@ -538,9 +538,9 @@ def plot_and_insight(df, plot_key, plot_label):
         st.session_state[toggle_key] = not st.session_state[toggle_key]
 
     button_label = "Hide Detailed Business Insights" if st.session_state[toggle_key] else "Show Detailed Business Insights"
-    st.button(button_label, key=f"toggle_button_{x_col}", on_click=toggle)
+    st.button(button_label, key=f"toggle_button_{plot_key}", on_click=toggle)
 
     if st.session_state[toggle_key]:
         st.markdown("### Business Insights For Stakeholders")
-        for insight in predefined_insights.get(x_col, [f"No insights available for {x_label}."]):
+        for insight in predefined_insights.get(plot_key, [f"No insights available for {plot_key}."]):
             st.markdown(f"- {insight}")
