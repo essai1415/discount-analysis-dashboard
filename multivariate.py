@@ -662,7 +662,7 @@ def plot_and_insight(df, plot_key, plot_label):
             st.dataframe(summary_df)
 
         elif plot_key == "Plot 9":
-            st.markdown("###  Brand-wise Avg Discount (%) by Region")
+            st.markdown("### Summary table")
 
             # Clean data - Match plot logic
             valid_df = df[
