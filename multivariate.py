@@ -280,12 +280,6 @@ def plot_and_insight(df, plot_key, plot_label):
             # Calculate discount percent for each transaction
             df['discount_percent'] = (df['discount'] / df['value']) * 100
 
-            # Aggregate by brand and level
-            summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
-                'value': 'sum',
-                'discount': 'count',              # Number of transactions
-                'discount_percent': 'mean',       # Average discount percent
-            })
 
             plt.figure(figsize=(18, 10))
             sns.set_theme(style="whitegrid")
