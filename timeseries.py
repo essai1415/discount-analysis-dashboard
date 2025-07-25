@@ -11,7 +11,7 @@ from matplotlib.ticker import MaxNLocator
 predefined_insights = {
     "Plot 1": [
         "Spikes in discounts (Days 9–13) may align with events like festivals, auspicious dates, or marketing campaigns.",
-        "Sudden drop after peak days suggests end of limited-period offers or demand saturation post events.",
+        "Sudden drop after peak days suggests end of limited period offers or demand saturation post events.",
         "Steady mid to end month discounting may indicate efforts to sustain engagement or clear non premium stock.",
         "Low discounts in the first week could reflect strategy to maintain premium pricing before planned triggers.",
         "Analyzing discount trends alongside festivals like Akshaya Tritiya, wedding season can improve campaign timing and inventory planning."
