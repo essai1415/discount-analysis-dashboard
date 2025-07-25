@@ -79,7 +79,7 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
 
         elif plot_key == "Plot 2":
-                st.subheader("Daily Trend of OBDISC and GHSDISC (as % of Bill Value)")
+                st.subheader("Summary table")
 
                 idisc_cols = ['obdisc', 'ghsdisc']
                 df2 = df.dropna(subset=idisc_cols + ['value'])
