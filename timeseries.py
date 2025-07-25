@@ -530,7 +530,7 @@ def plot_and_insight(df, plot_key, plot_label):
                 st.dataframe(filtered_df, use_container_width=True)
 
     # --- Toggle Logic for Insights ---
-    toggle_key = f"show_insights_{x_col}"
+    toggle_key = f"show_insights_{plot_key}"
     if toggle_key not in st.session_state:
         st.session_state[toggle_key] = False
 
