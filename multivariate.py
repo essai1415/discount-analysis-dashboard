@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.ticker as mtick
 
-
-
 # Define insights (revised to 5 per plot)
 predefined_insights = {
     "Plot 1": [
@@ -199,7 +197,7 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.title("Average Discount (%) vs Day and Gold Price")
             st.pyplot(fig)
             plt.clf()
-            
+
         elif plot_key == "Plot 5":
             discount_columns = ['discount', 'idisc', 'obdisc', 'ghsdisc']
             base_exclude_cols = ['year', 'yearmonth', 'customerno', 'brand', 'totcategory']
@@ -243,6 +241,7 @@ def plot_and_insight(df, plot_key, plot_label):
             fig = plt.gcf()
             st.pyplot(fig)
             plt.clf()
+
 
         elif plot_key == "Plot 7":
             # Drop missing or invalid rows
@@ -325,6 +324,9 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.tight_layout()
             st.pyplot(plt)
             plt.clf()
+
+
+
 
         elif plot_key == "Plot 9":
             df_plot = df.copy()
@@ -451,6 +453,12 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.tight_layout()
             st.pyplot(fig2)
             plt.clf()
+
+
+
+
+
+
 
 # Summary Table
 
@@ -633,7 +641,7 @@ def plot_and_insight(df, plot_key, plot_label):
                                     'Max_Discount', 'Transaction_Count', 'Total_Spend']])
 
         elif plot_key == "Plot 7":
-            st.markdown("###  Region-Brand Level Discount (%) Performance")
+            st.markdown("### 🔍 Region-Brand Level Discount (%) Performance")
 
             # Clean and standardize fields
             df_clean['region'] = df_clean['region'].astype(str).str.strip().str.upper()
@@ -687,6 +695,7 @@ def plot_and_insight(df, plot_key, plot_label):
                 }, inplace=True)
 
                 st.dataframe(summary[['Region', 'Brand', 'Avg Discount (%)', 'Transaction Count', 'Total Value (₹)']])
+
 
         elif plot_key == "Plot 8":
             # Ensure discount_percent exists for each transaction
@@ -754,7 +763,6 @@ def plot_and_insight(df, plot_key, plot_label):
                 )
 
                 st.dataframe(summary)
-
 
     # --- Toggle Logic for Insights ---
     toggle_key = f"show_insights_{plot_key}"  # Use plot_key here
