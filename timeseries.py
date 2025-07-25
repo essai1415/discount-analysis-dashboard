@@ -79,7 +79,7 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
 
         elif plot_key == "Plot 2":
-                st.subheader("Summary table")
+                st.subheader("Daily Trend of OBDISC and GHSDISC")
 
                 idisc_cols = ['obdisc', 'ghsdisc']
                 df2 = df.dropna(subset=idisc_cols + ['value'])
@@ -286,7 +286,7 @@ def plot_and_insight(df, plot_key, plot_label):
 
 
         elif plot_key == "Plot 2":
-            st.markdown("### Summary of OBDISC and GHSDISC Trends by Day (as % of Bill Value)")
+            st.markdown("### Summary table")
 
             idisc_cols = ['obdisc', 'ghsdisc']
             df2 = df.dropna(subset=idisc_cols + ['value'])
@@ -331,7 +331,7 @@ def plot_and_insight(df, plot_key, plot_label):
 
             summary_df = pd.DataFrame(summary_data)
 
-            st.write("**Key Insights from OBDISC and GHSDISC (Daily Averages as % of Bill Value)**")
+            st.write("**Key Insights from obdisc & ghsdisc (daily averages as % of bill value)**")
             st.dataframe(summary_df, use_container_width=True)
 
 
