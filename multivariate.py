@@ -454,12 +454,6 @@ def plot_and_insight(df, plot_key, plot_label):
             st.pyplot(fig2)
             plt.clf()
 
-
-
-
-
-
-
 # Summary Table
 
         if plot_key == "Plot 1":
@@ -641,7 +635,7 @@ def plot_and_insight(df, plot_key, plot_label):
                                     'Max_Discount', 'Transaction_Count', 'Total_Spend']])
 
         elif plot_key == "Plot 7":
-            st.markdown("### 🔍 Region-Brand Level Discount (%) Performance")
+            st.markdown("###  Region-Brand Level Discount (%) Performance")
 
             # Clean and standardize fields
             df_clean['region'] = df_clean['region'].astype(str).str.strip().str.upper()
@@ -696,8 +690,6 @@ def plot_and_insight(df, plot_key, plot_label):
 
                 st.dataframe(summary[['Region', 'Brand', 'Avg Discount (%)', 'Transaction Count', 'Total Value (₹)']])
 
-
-
         elif plot_key == "Plot 8":
             # (This assumes df_plot already has discount_percent calculated and cleaned above)
 
@@ -713,7 +705,7 @@ def plot_and_insight(df, plot_key, plot_label):
             st.dataframe(summary)
 
         elif plot_key == "Plot 9":
-            st.markdown("### 📊 Brand-wise Avg Discount (%) by Region")
+            st.markdown("###  Brand-wise Avg Discount (%) by Region")
 
             # Clean data - Match plot logic
             valid_df = df[
@@ -761,9 +753,6 @@ def plot_and_insight(df, plot_key, plot_label):
                 )
 
                 st.dataframe(summary)
-
-
-        
 
 
     # --- Toggle Logic for Insights ---
