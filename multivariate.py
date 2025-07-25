@@ -58,7 +58,12 @@ predefined_insights = {
         "Mia's strongest performance was in South 3, with ₹44L from 109 transactions and an average discount of 7.64%."
         "Tanishq in West 3 led in both volume (774 transactions) and value (₹9.08 Cr) despite offering a moderate average discount of 7.12%."
     ],
-    "Plot 8":[],
+    "Plot 8":["Tanishq at L2 generates the highest value (₹55.8 Cr) with a low discount rate (2.11%), indicating strong pricing power at scale.",
+              "Zoya at L1 gives the highest average discount (10.10%) despite only 43 transactions, suggesting potential over-discounting.",
+              "Ecom at L1 has a small contribution (₹44.8 Lakhs from 102 transactions) but a high discount rate (5.59%), hinting at inefficiency or low-margin sales.",
+              "Mia across L1 and L2 yields ₹4.9 Cr from 1,652 transactions with moderate discounts (3.67–4.87%), showing consistent but mid-level performance.",
+              "Tanish at L1 drives ₹32.4 Cr from 2,425 transactions at a 6.10% discount, highlighting volume-led sales possibly supported by promotional pricing."
+              ],
     "Plot 9":[]
 }
 
@@ -194,9 +199,7 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.title("Average Discount (%) vs Day and Gold Price")
             st.pyplot(fig)
             plt.clf()
-
-
-
+            
         elif plot_key == "Plot 5":
             discount_columns = ['discount', 'idisc', 'obdisc', 'ghsdisc']
             base_exclude_cols = ['year', 'yearmonth', 'customerno', 'brand', 'totcategory']
@@ -241,7 +244,6 @@ def plot_and_insight(df, plot_key, plot_label):
             st.pyplot(fig)
             plt.clf()
 
-
         elif plot_key == "Plot 7":
             # Drop missing or invalid rows
             df_clean = df.dropna(subset=['region', 'brand', 'totcategory', 'discount', 'value'])
@@ -276,48 +278,44 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
 
         elif plot_key == "Plot 8":
-            df_plot = df.copy()
+            # Calculate discount percent for each transaction
+            df['discount_percent'] = (df['discount'] / df['value']) * 100
 
-            # Filter valid rows
-            df_plot = df_plot[
-                (df_plot['brand'].notnull()) &
-                (df_plot['level'].notnull()) &
-                (df_plot['discount'] > 0) &
-                (df_plot['value'] > 0)
+            # Aggregate by brand and level
+            summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
+                'value': 'sum',
+                'discount': 'count',              # Number of transactions
+                'discount_percent': 'mean',       # Average discount percent
+            })
+
+            # Rename columns for display clarity
+            summary_df.columns = [
+                'Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)'
             ]
 
-            # Calculate discount percentage
-            df_plot['discount_percent'] = (df_plot['discount'] / df_plot['value']) * 100
+            # Optional: Order brands by total value for easier interpretation in the chart
+            brand_order = summary_df.groupby('Brand')['Total Value'].sum().sort_values(ascending=False).index
+            summary_df['Brand'] = pd.Categorical(summary_df['Brand'], categories=brand_order, ordered=True)
 
-            # Clean and standardize brand and level
-            df_plot['brand'] = df_plot['brand'].str.strip().str.upper()
-            df_plot['level'] = df_plot['level'].astype(str).str.strip().str.upper()
+            # Show the summary table
+            st.markdown("### Brand, Level Total Value, Number of Transactions & Avg Discount (%) Summary")
+            st.dataframe(summary_df.round({'Total Value': 2, 'Avg Discount (%)': 2}))
 
-            # Group by brand and level using discount_percent
-            grouped = df_plot.groupby(['brand', 'level'])['discount_percent'].mean().reset_index()
-
-            # Preserve brand order based on total discount percent (descending)
-            brand_order = grouped.groupby('brand')['discount_percent'].sum().sort_values(ascending=False).index
-            grouped['brand'] = pd.Categorical(grouped['brand'], categories=brand_order, ordered=True)
-
-            # Plot
             plt.figure(figsize=(18, 10))
             sns.set_theme(style="whitegrid")
 
             ax = sns.barplot(
-                data=grouped,
-                x='discount_percent',
-                y='brand',
-                hue='level',
+                data=summary_df,
+                x='Avg Discount (%)',
+                y='Brand',
+                hue='Level',
                 palette='Set2'
             )
 
-            # Bar labels
             for container in ax.containers:
                 ax.bar_label(container, fmt='%.2f%%', padding=3, fontsize=12)
 
-            # Titles and axis labels
-            plt.title("Average Discount (%) per Transaction by Brand and Level", fontsize=18, weight='bold')
+            plt.title("Average Discount (%) by Brand and Level", fontsize=18, weight='bold')
             plt.xlabel("Average Discount (%)", fontsize=14)
             plt.ylabel("Brand", fontsize=14)
             plt.xticks(fontsize=12)
@@ -691,18 +689,21 @@ def plot_and_insight(df, plot_key, plot_label):
                 st.dataframe(summary[['Region', 'Brand', 'Avg Discount (%)', 'Transaction Count', 'Total Value (₹)']])
 
         elif plot_key == "Plot 8":
-            # (This assumes df_plot already has discount_percent calculated and cleaned above)
+            # Ensure discount_percent exists for each transaction
+            df['discount_percent'] = (df['discount'] / df['value']) * 100
 
-            summary = df_plot.groupby(['brand', 'level']).agg(
-                Avg_Discount_Percent=('discount_percent', 'mean'),
-                Total_Transactions=('discount_percent', 'count')
-            ).round(2).reset_index().sort_values(by='Avg_Discount_Percent', ascending=False)
+            # Group by brand and level, aggregate results
+            summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
+                'value': 'sum',
+                'discount': 'count',              # Number of transactions
+                'discount_percent': 'mean',       # Average discount percent
+            })
 
-            # Rename for clarity
-            summary.columns = ['Brand', 'Level', 'Avg Discount (%)', 'Total Transactions']
+            # Rename columns for clarity
+            summary_df.columns = ['Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)']
 
-            st.markdown("### Brand × Level Discount (%) Overview")
-            st.dataframe(summary)
+            st.markdown("### Brand, Level Value, No of Transactions & Avg Discount % Summary")
+            st.dataframe(summary_df)
 
         elif plot_key == "Plot 9":
             st.markdown("###  Brand-wise Avg Discount (%) by Region")
