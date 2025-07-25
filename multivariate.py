@@ -496,7 +496,7 @@ def plot_and_insight(df, plot_key, plot_label):
             multivariate_summary = multivariate_summary[['Buyer Type', 'brand', 'Total_Customers', 'Total_Transactions', 'Avg Discount (%)']]
 
             # Display in Streamlit
-            st.markdown("### Buyer Type × Brand vs Discount Summary")
+            st.markdown("### Buyer Type & Brand vs Discount Summary")
             st.dataframe(multivariate_summary)
 
         elif plot_key == "Plot 4":
@@ -520,7 +520,7 @@ def plot_and_insight(df, plot_key, plot_label):
             daily_stats.columns = ['Day of Month', 'Avg Discount (%)', 'Avg Gold Price (₹)']
             daily_stats = daily_stats.round(2)
 
-            st.markdown("### Day-wise Discount vs Gold Price Summary")
+            st.markdown("### Day Wise Discount vs Gold Price Summary")
             st.dataframe(daily_stats)
 
 
