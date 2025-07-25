@@ -277,13 +277,30 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
 
         elif plot_key == "Plot 8":
-            # Calculate discount percent for each transaction
+    # Calculate discount percent for each transaction
             df['discount_percent'] = (df['discount'] / df['value']) * 100
-
-
+        
+            # Aggregate by brand and level
+            summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
+                'value': 'sum',
+                'discount': 'count',              # Number of transactions
+                'discount_percent': 'mean',       # Average discount percent
+            })
+        
+            # Rename columns for display clarity
+            summary_df.columns = [
+                'Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)'
+            ]
+        
+            # Optional: Order brands by total value for easier interpretation in the chart
+            brand_order = summary_df.groupby('Brand')['Total Value'].sum().sort_values(ascending=False).index
+            summary_df['Brand'] = pd.Categorical(summary_df['Brand'], categories=brand_order, ordered=True)
+        
+            # Removed summary table display here
+        
             plt.figure(figsize=(18, 10))
             sns.set_theme(style="whitegrid")
-
+        
             ax = sns.barplot(
                 data=summary_df,
                 x='Avg Discount (%)',
@@ -291,22 +308,20 @@ def plot_and_insight(df, plot_key, plot_label):
                 hue='Level',
                 palette='Set2'
             )
-
+        
             for container in ax.containers:
                 ax.bar_label(container, fmt='%.2f%%', padding=3, fontsize=12)
-
+        
             plt.title("Average Discount (%) by Brand and Level", fontsize=18, weight='bold')
             plt.xlabel("Average Discount (%)", fontsize=14)
             plt.ylabel("Brand", fontsize=14)
             plt.xticks(fontsize=12)
             plt.yticks(fontsize=12)
             plt.legend(title="Level", title_fontsize=13, fontsize=12, loc='center left', bbox_to_anchor=(1, 0.5))
-
+        
             plt.tight_layout()
             st.pyplot(plt)
             plt.clf()
-
-
 
 
         elif plot_key == "Plot 9":
