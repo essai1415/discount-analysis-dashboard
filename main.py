@@ -6,11 +6,16 @@ import matplotlib.pyplot as plt
 import multivariate
 import timeseries
 import fandf
-import base64
 import requests
 import io
 
+
 st.set_page_config(page_title="Jewellery Discount Dashboard", layout="centered")
+
+# Load the image and convert to base64
+import streamlit as st
+import base64
+
 # Load the image and convert to base64
 with open("gold.png", "rb") as f:
     data = f.read()
@@ -33,40 +38,25 @@ st.markdown(
 @st.cache_data
 def load_data():
     try:
-        # 🔗 Share link (replace with your own or use st.secrets["onedrive"]["share_url"])
-        share_url = "https://1drv.ms/x/c/6aed537a04b5f38c/EaDH-Q9DhU5At9UfThoHdeoBT9U_X5r3VVNdbTfScG5HOQ?e=Kgejin&nav=MTVfezQyMDI5Rjk4LTk1QUItNEVDNS04NzFDLTA3QzFCMDRFOUJDMX0"
+        # Get file ID securely
+        file_id = st.secrets["gdrive"]["file_id"]
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
-        # 🔒 Encode the URL (OneDrive API trick)
-        b64 = base64.b64encode(share_url.encode()).decode()
-        b64_mod = b64.rstrip("=").replace("/", "_").replace("+", "-")
-
-        # 🔽 Generate direct content URL
-        api_url = f"https://api.onedrive.com/v1.0/shares/u!{b64_mod}/root/content"
-
-        # 📥 Download the file
-        response = requests.get(api_url, allow_redirects=True)
+        # Download and read Excel file using openpyxl engine
+        response = requests.get(url)
         response.raise_for_status()
 
-        # 📊 Read into a DataFrame
-        df = pd.read_excel(io.BytesIO(response.content))
-        st.success(f"✅ Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+        df = pd.read_excel(io.BytesIO(response.content), engine="openpyxl")
+
+        st.success(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+
         return df
 
     except Exception as e:
-        st.error(f"❌ Failed to load data: {e}")
+        st.error(f"Failed to load data: {e}")
         return pd.DataFrame()
 
-# 🔽 Call the function
 df = load_data()
-
-# 🧪 Stop if nothing loaded
-if df.empty:
-    st.warning("⚠️ Data is empty or failed to load.")
-    st.stop()
-
-# 📄 Show data
-st.dataframe(df.head())
-
 
 # Dropdown 1: Select Analysis Type
 analysis_type = st.selectbox(
@@ -161,11 +151,11 @@ if analysis_type == "Quantitative Analysis":
 
     # 8. Price Band vs Discount
     elif selected_plot == plot_options[7]:
-        df_plot = df[df['priceband'].notnull()].copy()
+        df_plot = df[(df['discount'] > 0) & (df['priceband'].notnull())].copy()
         df_plot['priceband'] = df_plot['priceband'].astype(str).str.strip().str.upper()
-        df_plot = df_plot[~df_plot['priceband'].isin(['NIL', 'NULL']) & (df_plot['discount'] > 0)]
-        df_plot = df_plot.groupby('priceband')['discount'].mean().reset_index().sort_values(by='discount', ascending=False)
-        qualitative.plot_and_insight(df_plot, 'priceband', "Price Band")
+        df_plot = df_plot[~df_plot['priceband'].isin(['NIL', 'NULL'])]
+        quantitative.plot_and_insight(df_plot, 'priceband', "Price Band")
+
 
     # 9. Total EC Band vs Average Discount
     elif selected_plot == plot_options[8]:
@@ -190,8 +180,7 @@ elif analysis_type == "Qualitative Analysis":
         "4. Retail Cluster vs Discount",
         "5. Product Category vs Discount",
         "6. AMCB vs Discount",
-        "7. Daily Discount Trend",
-        "8. Price Band vs Discount"
+        "7. Daily Discount Trend"
     ]
     selected_plot = st.selectbox("Select Qualitative Plot:", plot_options)
 
@@ -254,7 +243,7 @@ elif analysis_type == "Qualitative Analysis":
         ax.set_xlabel("Day of Month (1–31)")
         ax.set_ylabel("Average Discount")
         
-        # ✅ Force all days 1–31 to show on x-axis
+        #  Force all days 1–31 to show on x-axis
         ax.set_xticks(range(1, 32))
 
         ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
@@ -262,64 +251,6 @@ elif analysis_type == "Qualitative Analysis":
 
         # Insights
         qualitative.plot_and_insight(df_daily, 'day', "Day of Month", chart_type="line")
-
-    elif selected_plot == plot_options[7]:
-        st.markdown("### 📊 Quantity Sold vs Avg. Making Charges by Discount Bucket")
-
-        import matplotlib.pyplot as plt
-        import numpy as np
-
-        # Create discount buckets
-        df['discount_bucket'] = pd.cut(
-            df['discount'],
-            bins=[-1, 5, 10, 15, 20, 25, 30, 50, 100],
-            labels=['0–5%', '5–10%', '10–15%', '15–20%', '20–25%', '25–30%', '30–50%', '50–100%']
-        )
-
-        # Aggregate data
-        grouped = df.groupby('discount_bucket').agg({
-            'qty': 'sum',
-            'mc': 'mean'
-        }).reset_index()
-
-        # Set discount bucket order
-        ordered_cats = ['0–5%', '5–10%', '10–15%', '15–20%', '20–25%', '25–30%', '30–50%', '50–100%']
-        grouped['discount_bucket'] = pd.Categorical(grouped['discount_bucket'], categories=ordered_cats, ordered=True)
-        grouped = grouped.sort_values('discount_bucket')
-
-        # Plotting
-        x = np.arange(len(grouped))  # label locations
-        width = 0.35  # bar width
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-        bars1 = ax.bar(x - width/2, grouped['qty'], width, label='Total Quantity Sold', color='mediumseagreen')
-        bars2 = ax.bar(x + width/2, grouped['mc'], width, label='Avg. Making Charges (₹)', color='cornflowerblue')
-
-        # Labels and formatting
-        ax.set_xlabel('Discount Bucket')
-        ax.set_ylabel('Value')
-        ax.set_title('Total Quantity vs Avg. Making Charges by Discount Bucket')
-        ax.set_xticks(x)
-        ax.set_xticklabels(grouped['discount_bucket'])
-        ax.legend()
-        ax.grid(axis='y', linestyle='--', alpha=0.5)
-
-        # Add labels on bars
-        for bar in bars1:
-            ax.annotate(f'{int(bar.get_height())}',
-                        xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                        xytext=(0, 4),
-                        textcoords="offset points",
-                        ha='center', va='bottom', fontsize=8)
-
-        for bar in bars2:
-            ax.annotate(f'{int(bar.get_height())}',
-                        xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                        xytext=(0, 4),
-                        textcoords="offset points",
-                        ha='center', va='bottom', fontsize=8)
-
-        st.pyplot(fig)
 
 # ...
 # --- Multivariate Analysis ---
@@ -334,8 +265,7 @@ elif analysis_type == "Multivariate Analysis":
         "Plot 6": "6.Top 50 Customers by Avg Discount",
         "Plot 7": "7.Avg Discount by Region, Brand",
         "Plot 8": "8. Avg Discount by Brand, Level & Discount",
-        "Plot 9": "9. Region vs Brand: Avg Discount per Transaction",
-        "Plot 10": "10. Avg Disc"
+        "Plot 9": "9. Region vs Brand: Avg Discount per Transaction"
     }
 
     multivariate_plot_keys = list(multivariate_plot_labels.keys())
