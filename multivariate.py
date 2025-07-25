@@ -287,19 +287,6 @@ def plot_and_insight(df, plot_key, plot_label):
                 'discount_percent': 'mean',       # Average discount percent
             })
 
-            # Rename columns for display clarity
-            summary_df.columns = [
-                'Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)'
-            ]
-
-            # Optional: Order brands by total value for easier interpretation in the chart
-            brand_order = summary_df.groupby('Brand')['Total Value'].sum().sort_values(ascending=False).index
-            summary_df['Brand'] = pd.Categorical(summary_df['Brand'], categories=brand_order, ordered=True)
-
-            # Show the summary table
-            st.markdown("### Brand, Level Total Value, Number of Transactions & Avg Discount (%) Summary")
-            st.dataframe(summary_df.round({'Total Value': 2, 'Avg Discount (%)': 2}))
-
             plt.figure(figsize=(18, 10))
             sns.set_theme(style="whitegrid")
 
