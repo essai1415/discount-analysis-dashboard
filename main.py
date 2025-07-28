@@ -257,7 +257,7 @@ elif analysis_type == "Qualitative Analysis":
 elif analysis_type == "Multivariate Analysis":
 
     multivariate_plot_labels = {
-        "Plot 1": "1. Top 20 Discounts by Location",
+        "Plot 1": "1. Top 20 Discounted Transactions by Location",
         "Plot 2": "2. Return Rate: With vs Without Discount",
         "Plot 3": "3. Average Discount for New vs Existing Customers",
         "Plot 4": "4. Discount vs Day and Gold Price",
