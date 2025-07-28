@@ -33,10 +33,10 @@ predefined_insights = {
         "OTHERS cluster has only 3 transactions and no discount, likely indicating either negligible demand or an area to investigate for growth or phase-out."
     ],
     "totcategory": [
-        "DIA category leads with ₹39.3 Cr in sales across 3,156 transactions, but also gives the highest total discount of ₹5.84 Cr, with an average discount of ₹18,506 per transaction,",
-        "SSB shows the highest average discount per transaction at ₹58,200, despite only 24 transactions",
+        "DIA category leads with ₹39.3 Cr in sales across 3,156 transactions, but also gives the highest total discount of ₹5.84 Cr, with an average discount of ₹18,506 per transaction.",
+        "SSB shows the highest average discount per transaction at ₹58,200, despite only 24 transactions.",
         "SSC offers the second-highest average discount of ₹66,176 over just 11 transactions, signaling a possible luxury or niche segment needing tighter discount control.",
-        "LCG and SIL have the lowest average discounts of ₹1,847 and ₹499 respectively",
+        "LCG and SIL have the lowest average discounts of ₹1,847 and ₹499 respectively.",
         "SSA’s average discount of ₹21,513 across 163 bills marks it as a mid-volume but high-discount category."
     ],
     "amcb": [
