@@ -40,11 +40,11 @@ predefined_insights = {
         "SSA’s average discount of ₹21,513 across 163 bills marks it as a mid-volume but high-discount category."
     ],
     "amcb": [
-        "Segment F (30%+) had the highest average discount per transaction at ₹10,861 across 251 transactions, totaling a discount of ₹27.26 lakhs.",
-        "Segment E (24–30%) contributed the highest total discount of ₹31.98 lakhs over 768 transactions, with an average discount of ₹4,164.",
-        "Segment D (18–24%) recorded the maximum number of transactions (1,040) with a total discount of ₹26.98 lakhs and an average discount of ₹2,595.",
-        "Segment C (14–18%) served as a mid-tier group, delivering ₹5.12 lakhs in total discount across 219 transactions, averaging ₹2,337 per transaction.",
-        "Segments A (1–10%) and B (11–14%) combined accounted for just ₹2.54 lakhs in total discount across 307 transactions, with average discounts of ₹516 and ₹1,032 respectively."
+        "Band F (30%+) had the highest average discount per transaction at ₹10,861 across 251 transactions, totaling a discount of ₹27.26 lakhs.",
+        "Band E (24–30%) contributed the highest total discount of ₹31.98 lakhs over 768 transactions, with an average discount of ₹4,164.",
+        "Band D (18–24%) recorded the maximum number of transactions (1,040) with a total discount of ₹26.98 lakhs and an average discount of ₹2,595.",
+        "Band C (14–18%) served as a mid-tier group, delivering ₹5.12 lakhs in total discount across 219 transactions, averaging ₹2,337 per transaction.",
+        "Band A (1–10%) and B (11–14%) combined accounted for just ₹2.54 lakhs in total discount across 307 transactions, with average discounts of ₹516 and ₹1,032 respectively."
     ],
     "day": [
         "Day 9 recorded the highest total discount of ₹1.13 Cr across 558 transactions, averaging ₹20,369 per transaction.",
