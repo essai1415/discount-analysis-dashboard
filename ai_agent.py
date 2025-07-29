@@ -4,7 +4,7 @@ import pandas as pd
 import random
 
 # === Groq API Setup ===
-groq_api_key = "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"  # Replace with your key
+groq_api_key = st.secrets["groq"]["groq_api_key"]
 client = Groq(api_key=groq_api_key)
 
 # === Main Insight Panel Function ===
