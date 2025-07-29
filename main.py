@@ -40,8 +40,8 @@ def load_data():
     try:
         # Get file ID securely
         file_id = st.secrets["gdrive"]["file_id"]
+        groq_api_key = st.secrets["gdrive"]["groq_api_key"]
         url = f"https://drive.google.com/uc?export=download&id={file_id}"
-
         # Download and read Excel file using openpyxl engine
         response = requests.get(url)
         response.raise_for_status()
