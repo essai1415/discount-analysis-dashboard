@@ -265,18 +265,24 @@ def plot_and_insight(df_plot, x_col, x_label):
         summary_table = pd.DataFrame(data_rows, columns=columns)
         st.dataframe(summary_table, use_container_width=True)
         
-        # --- Toggle Logic for Insights ---
-    toggle_key = f"show_insights_{x_col}"
-    if toggle_key not in st.session_state:
-        st.session_state[toggle_key] = False
+#Ai Agent Logic
 
-    def toggle():
-        st.session_state[toggle_key] = not st.session_state[toggle_key]
+    from ai_agent import display_insight_panel
 
-    button_label = "Hide Detailed Business Insights" if st.session_state[toggle_key] else "Show Detailed Business Insights"
-    st.button(button_label, key=f"toggle_button_{x_col}", on_click=toggle)
+    # Safely fetch insights
+    col_insights = predefined_insights.get(x_col, [f"No insights available for {x_col}."])
 
-    if st.session_state[toggle_key]:
-        st.markdown("### Business Insights For Stakeholders")
-        for insight in predefined_insights.get(x_col, [f"No insights available for {x_label}."]):
-            st.markdown(f"- {insight}")
+    # Handle summary conversion if it's a list
+    if isinstance(summary_data, list) and len(summary_data) > 1:
+        summary_df = pd.DataFrame(summary_data[1:], columns=summary_data[0])
+    elif isinstance(summary_data, pd.DataFrame):
+        summary_df = summary_data
+    else:
+        summary_df = None
+
+    # Call AI insight panel
+    display_insight_panel(
+        x_col=x_col,
+        predefined_insights={x_col: col_insights},
+        summary_df=summary_df
+    )
