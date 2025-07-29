@@ -35,9 +35,9 @@ predefined_insights = {
         "This pattern suggests an opportunity to highlight premium pieces through targeted discounts on making charges."
     ],
     "goldprice": [
-        "Band 10 alone got **₹4.06 Cr** in discounts, nearly **45.08% of total discount value**.",
-        "Bands 9 and 10 together received **₹5.8 Cr**, covering over **70% of all discounts**.",
-        "Bands 1 to 4 received only **₹78.7 Lakhs in total**, despite having similar order volumes.",
+        "Band 10 alone got **₹4.64 Cr** in discounts, nearly **45.08% of total discount value**.",
+        "Bands 9 and 10 together received **₹6.46 Cr**, covering over **70% of all discounts**.",
+        "Bands 1 to 4 received only **₹80.8 Lakhs in total**, despite having similar order volumes.",
         "Average discount per transaction rises steeply from **₹744 in Band 1 to ₹43,147 in Band 10**",
         "Optimizing Bands 9–10 discounts and upselling in Bands 5–7 can improve profits."
     ],
@@ -264,7 +264,7 @@ def plot_and_insight(df_plot, x_col, x_label):
         data_rows = summary_data[1:]                # Rest are data
         summary_table = pd.DataFrame(data_rows, columns=columns)
         st.dataframe(summary_table, use_container_width=True)
-        
+
 #Ai Agent Logic
 
     from ai_agent import display_insight_panel
