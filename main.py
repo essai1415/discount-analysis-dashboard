@@ -39,7 +39,7 @@ st.markdown(
 def load_data():
     try:
         # Get file ID securely
-        file_id = st.secrets["gdrive"]["file_id"]
+        file_id = st.secrets["gdrive"]
         url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
         # Download and read Excel file using openpyxl engine
