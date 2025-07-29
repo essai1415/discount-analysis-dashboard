@@ -14,7 +14,7 @@ import pandas as pd
 import re
 
 # === Groq API Setup ===
-groq_api_key = st.secrets["groq_api_key"]
+groq_api_key = st.secrets["groq"]["groq_api_key"]
 client = Groq(api_key=groq_api_key)
 
 def display_insight_panel(x_col, predefined_insights, summary_df, model="llama3-70b-8192"):
