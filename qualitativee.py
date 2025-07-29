@@ -33,18 +33,18 @@ predefined_insights = {
         "OTHERS cluster has only 3 transactions and no discount, likely indicating either negligible demand or an area to investigate for growth or phase-out."
     ],
     "totcategory": [
-        "DIA category leads with ₹39.3 Cr in sales across 3,156 transactions, but also gives the highest total discount of ₹5.84 Cr, with an average discount of ₹18,506 per transaction.",
-        "SSB shows the highest average discount per transaction at ₹58,200, despite only 24 transactions.",
+        "DIA category leads with ₹39.3 Cr in sales across 3,156 transactions, but also gives the highest total discount of ₹5.84 Cr, with an average discount of ₹18,506 per transaction,",
+        "SSB shows the highest average discount per transaction at ₹58,200, despite only 24 transactions",
         "SSC offers the second-highest average discount of ₹66,176 over just 11 transactions, signaling a possible luxury or niche segment needing tighter discount control.",
-        "LCG and SIL have the lowest average discounts of ₹1,847 and ₹499 respectively.",
+        "LCG and SIL have the lowest average discounts of ₹1,847 and ₹499 respectively",
         "SSA’s average discount of ₹21,513 across 163 bills marks it as a mid-volume but high-discount category."
     ],
     "amcb": [
-        "Band F (30%+) had the highest average discount per transaction at ₹10,861 across 251 transactions, totaling a discount of ₹27.26 lakhs.",
-        "Band E (24–30%) contributed the highest total discount of ₹31.98 lakhs over 768 transactions, with an average discount of ₹4,164.",
-        "Band D (18–24%) recorded the maximum number of transactions (1,040) with a total discount of ₹26.98 lakhs and an average discount of ₹2,595.",
-        "Band C (14–18%) served as a mid-tier group, delivering ₹5.12 lakhs in total discount across 219 transactions, averaging ₹2,337 per transaction.",
-        "Band A (1–10%) and B (11–14%) combined accounted for just ₹2.54 lakhs in total discount across 307 transactions, with average discounts of ₹516 and ₹1,032 respectively."
+        "Segment F (30%+) had the highest average discount per transaction at ₹10,861 across 251 transactions, totaling a discount of ₹27.26 lakhs.",
+        "Segment E (24–30%) contributed the highest total discount of ₹31.98 lakhs over 768 transactions, with an average discount of ₹4,164.",
+        "Segment D (18–24%) recorded the maximum number of transactions (1,040) with a total discount of ₹26.98 lakhs and an average discount of ₹2,595.",
+        "Segment C (14–18%) served as a mid-tier group, delivering ₹5.12 lakhs in total discount across 219 transactions, averaging ₹2,337 per transaction.",
+        "Segments A (1–10%) and B (11–14%) combined accounted for just ₹2.54 lakhs in total discount across 307 transactions, with average discounts of ₹516 and ₹1,032 respectively."
     ],
     "day": [
         "Day 9 recorded the highest total discount of ₹1.13 Cr across 558 transactions, averaging ₹20,369 per transaction.",
@@ -119,7 +119,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
             "Number Of Transactions": [43, 8203, 1652, 102],
             "Number Of Returns": [3, 349, 68, 0]
         })
-        st.markdown("### Brand Wise Discount and Sales Summary")
+        st.markdown("### Brand-Wise Discount and Sales Summary")
         st.dataframe(summary_df, use_container_width=True)
 
     elif x_col == "region":
@@ -161,7 +161,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
         summary_df["Total Discount"] = summary_df["Total Discount"].round(2)
 
         # Display in Streamlit
-        st.markdown("### Region Wise Discount Summary")
+        st.markdown("### Region-Wise Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
 
 
@@ -180,7 +180,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
             "Avg Discount per Transaction": [12069.21, 7167.66, 774.39],
             "Avg Bill Value": [128911.59, 81734.19, 71110.93]
         })
-        st.markdown("### Channel Level Discount Summary")
+        st.markdown("### Channel-Level Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
 
 
@@ -221,7 +221,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
             ]
         })
         
-        st.markdown("### Retail Cluster Wise Discount Summary")
+        st.markdown("### Rcluster-Wise Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
     
     elif x_col == "totcategory":
@@ -252,7 +252,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
 
         })
 
-        st.markdown("### Category Wise Discount Summary")
+        st.markdown("### Totcategory-Wise Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
 
     elif x_col == "amcb":
@@ -299,8 +299,7 @@ def plot_and_insight(df_plot, x_col, x_label, chart_type="bar", category_order=N
         st.markdown("### Day of Month Discount Summary")
         st.dataframe(summary_df, use_container_width=True)
 
-
-    # Ai Agent Logic
+#Ai Agent Logic
 
     from ai_agent import display_insight_panel
 
