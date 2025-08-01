@@ -133,7 +133,8 @@ def display_insight_panel(x_col, predefined_insights, summary_df, model="llama3-
         \"\"\"{summary_text}\"\"\"
 
         Give a concise, precise, very short, helpful and practical answer in simple business terms.
-        Structure your response as bullet points for clarity.
+        Structure your response as bullet points for clarity. You're miscalculating lakhs as crores. 
+        The entire sales is only 90+ crores. Please and give a careful and precise answer!
         """
         try:
             with st.spinner("AI answering..."):
