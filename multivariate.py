@@ -48,6 +48,14 @@ predefined_insights = {
         "Customer 2349 (DIA) got the highest single discount of ₹5.26L over only 5 transactions, spending ₹48.2L, may need manual review.",
         "Customers like 89042 and 91004 bought only 6 times but spent over ₹18.9L and ₹15.1L, showing they are big spenders who buy rarely and should be personally followed up."
     ],
+    "Plot 7": [
+        "Zoya  in WEST 3 gives the highest average discount (12.14%) with just 9 transactions totaling ₹77.96L, pointing to a small but highly discounted customer group.",
+        "Tanishq in NORTH 1 leads with ₹13.16Cr in sales across 1000 transactions, showing strong reach with moderate 6.86% discounts.",
+        "South 2 region saw the second highest contribution of Tanishq, totaling ₹9.2 Cr over 683 transactions, with a 6.32% average discount.",
+        "Zoya achieved the highest average discount of 12.14% in West 3, though from only 9 transactions, generating ₹77.95 Lakhs.",
+        "Mia's strongest performance was in South 3, with ₹44L from 109 transactions and an average discount of 7.64%."
+        "Tanishq in West 3 led in both volume (774 transactions) and value (₹9.08 Cr) despite offering a moderate average discount of 7.12%."
+    ],
     "Plot 8":["Tanishq at L2 generates the highest value (₹55.8 Cr) with a low discount rate (2.11%), indicating strong pricing power at scale.",
               "Zoya at L1 gives the highest average discount (10.10%) despite only 43 transactions, suggesting potential over-discounting.",
               "Ecom at L1 has a small contribution (₹44.8 Lakhs from 102 transactions) but a high discount rate (5.59%), hinting at inefficiency or low-margin sales.",
@@ -58,7 +66,8 @@ predefined_insights = {
               "Mia maintains a stable discount range (5.77%–7.35%), reflecting a controlled and uniform pricing approach across regions.",
               "South and North regions have the biggest gap in discounts, for example, South ranges from 5.84% (Tanishq in South 1) to 12.18% (Zoya in South 3), a difference of 6.34%.",
               "The East region gives the lowest discounts overall, Mia is at 5.77% and Tanishq at 5.84%, lower than other regions like South or West.",
-              "South 3 is the most discount-heavy area, with Mia at 6.74%, Tanishq at 6.2%, and Zoya at 12.18%."]
+              "South 3 is the most discount-heavy area, with Mia at 6.74%, Tanishq at 6.2%, and Zoya at 12.18%."
+              ]
 }
 
 # Dropdown-style plotting function
@@ -239,48 +248,48 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
 
         elif plot_key == "Plot 8":
-    # Calculate discount percent for each transaction
-            df['discount_percent'] = (df['discount'] / df['value']) * 100
-        
-            # Aggregate by brand and level
-            summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
-                'value': 'sum',
-                'discount': 'count',              # Number of transactions
-                'discount_percent': 'mean',       # Average discount percent
-            })
-            summary_df.columns = [
-                'Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)'
-            ]
-            # Optional: Order brands by total value for easier interpretation in the chart
-            brand_order = summary_df.groupby('Brand')['Total Value'].sum().sort_values(ascending=False).index
-            summary_df['Brand'] = pd.Categorical(summary_df['Brand'], categories=brand_order, ordered=True)
-        
-            # Removed summary table display here
-        
-            plt.figure(figsize=(18, 10))
-            sns.set_theme(style="whitegrid")
-        
-            ax = sns.barplot(
-                data=summary_df,
-                x='Avg Discount (%)',
-                y='Brand',
-                hue='Level',
-                palette='Set2'
-            )
-        
-            for container in ax.containers:
-                ax.bar_label(container, fmt='%.2f%%', padding=3, fontsize=12)
-        
-            plt.title("Average Discount (%) by Brand and Level", fontsize=18, weight='bold')
-            plt.xlabel("Average Discount (%)", fontsize=14)
-            plt.ylabel("Brand", fontsize=14)
-            plt.xticks(fontsize=12)
-            plt.yticks(fontsize=12)
-            plt.legend(title="Level", title_fontsize=13, fontsize=12, loc='center left', bbox_to_anchor=(1, 0.5))
-        
-            plt.tight_layout()
-            st.pyplot(plt)
-            plt.clf()
+        # Calculate discount percent for each transaction
+                df['discount_percent'] = (df['discount'] / df['value']) * 100
+            
+                # Aggregate by brand and level
+                summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
+                    'value': 'sum',
+                    'discount': 'count',              # Number of transactions
+                    'discount_percent': 'mean',       # Average discount percent
+                })
+                summary_df.columns = [
+                    'Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)'
+                ]
+                # Optional: Order brands by total value for easier interpretation in the chart
+                brand_order = summary_df.groupby('Brand')['Total Value'].sum().sort_values(ascending=False).index
+                summary_df['Brand'] = pd.Categorical(summary_df['Brand'], categories=brand_order, ordered=True)
+            
+                # Removed summary table display here
+            
+                plt.figure(figsize=(18, 10))
+                sns.set_theme(style="whitegrid")
+            
+                ax = sns.barplot(
+                    data=summary_df,
+                    x='Avg Discount (%)',
+                    y='Brand',
+                    hue='Level',
+                    palette='Set2'
+                )
+            
+                for container in ax.containers:
+                    ax.bar_label(container, fmt='%.2f%%', padding=3, fontsize=12)
+            
+                plt.title("Average Discount (%) by Brand and Level", fontsize=18, weight='bold')
+                plt.xlabel("Average Discount (%)", fontsize=14)
+                plt.ylabel("Brand", fontsize=14)
+                plt.xticks(fontsize=12)
+                plt.yticks(fontsize=12)
+                plt.legend(title="Level", title_fontsize=13, fontsize=12, loc='center left', bbox_to_anchor=(1, 0.5))
+            
+                plt.tight_layout()
+                st.pyplot(plt)
+                plt.clf()
 
 
         elif plot_key == "Plot 9":
@@ -407,323 +416,184 @@ def plot_and_insight(df, plot_key, plot_label):
             st.pyplot(fig2)
             plt.clf()
 
-# Summary Table
+    # === Summary Table Generation Per Plot ===
+    summary_df = None
 
-        if plot_key == "Plot 1":
-            # [Existing plot logic above...]
-            summary_table = top20.copy()
-            summary_table['docdate'] = pd.to_datetime(summary_table['docdate']).dt.strftime('%Y-%m-%d')
-            summary_table = summary_table.rename(columns={
-                'docdate': 'Date',
-                'loccode': 'Location',
-                'discount': 'Discount Value',
-                'value': 'Transaction Value'
-            })[['Date', 'Location', 'Discount Value', 'Transaction Value']]
-            st.markdown("###  Top 20 Discounted Transactions")
-            st.dataframe(summary_table)
+    if plot_key == "Plot 1":
+        summary_df = top20.copy()
+        summary_df['docdate'] = pd.to_datetime(summary_df['docdate']).dt.strftime('%Y-%m-%d')
+        summary_df = summary_df.rename(columns={
+            'docdate': 'Date',
+            'loccode': 'Location',
+            'discount': 'Discount Value',
+            'value': 'Transaction Value'
+        })[['Date', 'Location', 'Discount Value', 'Transaction Value']]
+        st.markdown("###  Top 20 Discounted Transactions")
+        st.dataframe(summary_df)
 
-        elif plot_key == "Plot 2":
-            # Step 1: Flag returns and discounts
-            df['returned'] = (df['qty'] < 0) | (df['value'] < 0)
-            df['got_discount'] = df['discount'] > 0
+    elif plot_key == "Plot 2":
+        df['returned'] = (df['qty'] < 0) | (df['value'] < 0)
+        df['got_discount'] = df['discount'] > 0
+        customer_flags = df.groupby('customerno').agg({
+            'got_discount': 'any',
+            'returned': 'any'
+        }).reset_index()
+        customer_flags['Discount Group'] = customer_flags['got_discount'].map({
+            True: 'With Discount',
+            False: 'Without Discount'
+        })
+        discount_filter = st.selectbox("Filter by Discount Group", options=['All', 'With Discount', 'Without Discount'], index=0)
+        if discount_filter != 'All':
+            customer_flags = customer_flags[customer_flags['Discount Group'] == discount_filter]
+        total_customers = customer_flags['customerno'].nunique()
+        total_returns = customer_flags['returned'].sum()
+        avg_return_rate = (total_returns / total_customers * 100) if total_customers > 0 else 0
+        summary_df = pd.DataFrame({
+            "Metric": ["Total Unique Customers", "Customers Who Returned", "Return Rate (%)"],
+            "Value": [total_customers, int(total_returns), round(avg_return_rate, 2)]
+        })
+        st.markdown("### Customer Return Summary")
+        st.dataframe(summary_df)
 
-            # Step 2: Aggregate per customer
-            customer_flags = df.groupby('customerno').agg({
-                'got_discount': 'any',
-                'returned': 'any'
-            }).reset_index()
+    elif plot_key == "Plot 3":
+        df['Buyer Type'] = df.groupby('customerno')['customerno'].transform('count').apply(lambda x: 'One-Time Buyer' if x == 1 else 'Multiple-Time Buyer')
+        selected_buyer_types = st.multiselect("Select Buyer Type(s):", df['Buyer Type'].unique(), default=df['Buyer Type'].unique())
+        selected_brands = st.multiselect("Select Brand(s):", df['brand'].unique(), default=df['brand'].unique())
+        filtered_df = df[df['Buyer Type'].isin(selected_buyer_types) & df['brand'].isin(selected_brands)]
+        summary_df = filtered_df.groupby(['Buyer Type', 'brand']).agg(
+            Total_Customers=('customerno', 'nunique'),
+            Total_Transactions=('customerno', 'count'),
+            Total_Discount=('discount', 'sum'),
+            Total_Value=('value', 'sum')
+        ).reset_index()
+        summary_df['Avg Discount (%)'] = summary_df.apply(
+            lambda row: round((row['Total_Discount'] / row['Total_Value']) * 100, 2) if row['Total_Value'] > 0 else 0,
+            axis=1
+        )
+        summary_df = summary_df[['Buyer Type', 'brand', 'Total_Customers', 'Total_Transactions', 'Avg Discount (%)']]
+        st.markdown("### Buyer Type × Brand vs Discount Summary")
+        st.dataframe(summary_df)
 
-            # Step 3: Label groups
-            customer_flags['Discount Group'] = customer_flags['got_discount'].map({
-                True: 'With Discount',
-                False: 'Without Discount'
+    elif plot_key == "Plot 4":
+        df['docdate'] = pd.to_datetime(df['docdate'])
+        df['day'] = df['docdate'].dt.day
+        df['discount_percent'] = (df['discount'] / df['value']) * 100
+        df = df[(df['value'] > 0) & (df['discount_percent'] >= 0)]
+        summary_df = df.groupby('day').agg({
+            'discount_percent': 'mean',
+            'goldprice': 'mean'
+        }).reset_index()
+        summary_df.columns = ['Day of Month', 'Avg Discount (%)', 'Avg Gold Price (₹)']
+        summary_df = summary_df.round(2)
+        st.markdown("### Day-wise Discount vs Gold Price Summary")
+        st.dataframe(summary_df)
+
+    elif plot_key == "Plot 5":
+        rows = []
+        for disc_col in discount_columns:
+            eligible_columns = [col for col in df.select_dtypes(include='number').columns if col not in discount_columns + base_exclude_cols]
+            corr_series = df[eligible_columns + [disc_col]].corr()[disc_col].drop(disc_col)
+            top_feature = corr_series.idxmax()
+            rows.append({
+                "Discount Type": disc_col.upper(),
+                "Top Correlated Feature": top_feature,
+                "Correlation Value": round(corr_series[top_feature], 3)
             })
+        summary_df = pd.DataFrame(rows)
+        st.markdown("###  Key Drivers of Each Discount Type")
+        st.dataframe(summary_df)
 
-            # Sidebar: Only Discount Group filter
-            discount_filter = st.selectbox(
-                "Filter by Discount Group",
-                options=['All', 'With Discount', 'Without Discount'],
-                index=0
-            )
-
-            # Apply selected filter
-            if discount_filter != 'All':
-                customer_flags = customer_flags[customer_flags['Discount Group'] == discount_filter]
-
-            # Summary metrics
-            total_customers = customer_flags['customerno'].nunique()
-            total_returns = customer_flags['returned'].sum()
-            avg_return_rate = (total_returns / total_customers * 100) if total_customers > 0 else 0
-
-            # Display summary
-            st.markdown("### Customer Return Summary")
-            st.markdown(f"- **Total Unique Customers:** {total_customers}")
-            st.markdown(f"- **Customers Who Returned:** {int(total_returns)}")
-            st.markdown(f"- **Return Rate:** {avg_return_rate:.2f}%")
-
-        elif plot_key == "Plot 3":
-            # Add Buyer Type column
-            df['Buyer Type'] = df.groupby('customerno')['customerno'].transform('count').apply(
-                lambda x: 'One-Time Buyer' if x == 1 else 'Multiple-Time Buyer'
-            )
-
-            # Dropdown filters
-            buyer_type_options = df['Buyer Type'].unique().tolist()
-            brand_options = df['brand'].unique().tolist()
-
-            selected_buyer_types = st.multiselect("Select Buyer Type(s):", buyer_type_options, default=buyer_type_options)
-            selected_brands = st.multiselect("Select Brand(s):", brand_options, default=brand_options)
-
-            # Filtered DataFrame
-            filtered_df = df[df['Buyer Type'].isin(selected_buyer_types) & df['brand'].isin(selected_brands)]
-
-            # Group by Buyer Type and Brand
-            multivariate_summary = filtered_df.groupby(['Buyer Type', 'brand']).agg(
-                Total_Customers=('customerno', 'nunique'),
-                Total_Transactions=('customerno', 'count'),
-                Total_Discount=('discount', 'sum'),
-                Total_Value=('value', 'sum')
-            ).reset_index()
-
-            multivariate_summary['Avg Discount (%)'] = multivariate_summary.apply(
-                lambda row: round((row['Total_Discount'] / row['Total_Value']) * 100, 2)
-                if row['Total_Value'] > 0 else 0,
-                axis=1
-            )
-
-
-            # Final clean columns
-            multivariate_summary = multivariate_summary[['Buyer Type', 'brand', 'Total_Customers', 'Total_Transactions', 'Avg Discount (%)']]
-
-            # Display in Streamlit
-            st.markdown("### Buyer Type & Brand vs Discount Summary")
-            st.dataframe(multivariate_summary)
-
-        elif plot_key == "Plot 4":
-            df['docdate'] = pd.to_datetime(df['docdate'])
-            df['day'] = df['docdate'].dt.day
-
-            # Calculate discount percentage
-            df['discount_percent'] = (df['discount'] / df['value']) * 100
-
-            # Remove negative values and zero bill value (to avoid division by zero)
-            df = df[(df['value'] > 0) & (df['discount_percent'] >= 0)]
-
-            # Group by day
-            daily_df = df.groupby('day').agg({
-                'discount_percent': 'mean',
-                'goldprice': 'mean'
-            }).reset_index()
-
-            # Updated summary table
-            daily_stats = daily_df.copy()
-            daily_stats.columns = ['Day of Month', 'Avg Discount (%)', 'Avg Gold Price (₹)']
-            daily_stats = daily_stats.round(2)
-
-            st.markdown("### Day Wise Discount vs Gold Price Summary")
-            st.dataframe(daily_stats)
-
-
-        elif plot_key == "Plot 5":
-            rows = []
-            for disc_col in discount_columns:
-                eligible_columns = [col for col in df.select_dtypes(include='number').columns 
-                                    if col not in discount_columns + base_exclude_cols]
-                corr_series = df[eligible_columns + [disc_col]].corr()[disc_col].drop(disc_col)
-                top_feature = corr_series.idxmax()
-                rows.append({
-                    "Discount Type": disc_col.upper(),
-                    "Top Correlated Feature": top_feature,
-                    "Correlation Value": round(corr_series[top_feature], 3)
-                })
-            st.markdown("###  Key Drivers of Each Discount Type")
-            st.dataframe(pd.DataFrame(rows))
-
-        elif plot_key == "Plot 6":
+    elif plot_key == "Plot 6":
+        valid_df = df_clean[(df_clean['discount'] >= 0) & (df_clean['qty'] > 0) & (~df_clean['totcategory'].isin(["NULL", "[NULL]", "None", "", None])) & (df_clean['totcategory'].notna())]
+        selected_brands = st.multiselect("Select Brand(s):", sorted(valid_df['brand'].dropna().unique()), default=sorted(valid_df['brand'].dropna().unique()))
+        selected_categories = st.multiselect("Select Category(ies):", sorted(valid_df['totcategory'].unique()), default=sorted(valid_df['totcategory'].unique()))
+        filtered_df = valid_df[(valid_df['brand'].isin(selected_brands)) & (valid_df['totcategory'].isin(selected_categories))]
+        if not filtered_df.empty:
+            brand_mode = filtered_df.groupby('customerno')['brand'].agg(lambda x: x.mode().iloc[0] if not x.mode().empty else None)
+            category_mode = filtered_df.groupby('customerno')['totcategory'].agg(lambda x: x.mode().iloc[0] if not x.mode().empty else None)
+            summary_df = filtered_df.groupby('customerno').agg(
+                Max_Discount=('discount', 'max'),
+                Transaction_Count=('discount', 'count'),
+                Total_Spend=('value', 'sum')
+            ).round(2)
+            summary_df['Most Frequent Brand'] = brand_mode
+            summary_df['Top Category Purchased'] = category_mode
+            summary_df = summary_df.reset_index().sort_values(by='Transaction_Count', ascending=False).head(50)
             st.markdown("###  Top 50 Customers by Brand & Category Preference")
+            st.dataframe(summary_df[['customerno', 'Most Frequent Brand', 'Top Category Purchased', 'Max_Discount', 'Transaction_Count', 'Total_Spend']])
 
-            # Clean data: Remove invalid/NULL values in totcategory and filter only valid purchases
-            valid_df = df_clean[
-                (df_clean['discount'] >= 0) &
-                (df_clean['qty'] > 0) &
-                (~df_clean['totcategory'].isin(["NULL", "[NULL]", "None", "", None])) &
-                (df_clean['totcategory'].notna())
-            ]
-
-            # Filters
-            brands = valid_df['brand'].dropna().unique().tolist()
-            categories = valid_df['totcategory'].unique().tolist()
-
-            selected_brands = st.multiselect("Select Brand(s):", options=sorted(brands), default=sorted(brands))
-            selected_categories = st.multiselect("Select Category(ies):", options=sorted(categories), default=sorted(categories))
-
-            # Apply filters
-            filtered_df = valid_df[
-                (valid_df['brand'].isin(selected_brands)) &
-                (valid_df['totcategory'].isin(selected_categories))
-            ]
-
-            if filtered_df.empty:
-                st.warning("No data available for the selected filters.")
-            else:
-                # Groupwise most frequent brand/category (mode)
-                brand_mode = filtered_df.groupby('customerno')['brand'].agg(lambda x: x.mode().iloc[0] if not x.mode().empty else None)
-                category_mode = filtered_df.groupby('customerno')['totcategory'].agg(lambda x: x.mode().iloc[0] if not x.mode().empty else None)
-
-                # Summary aggregation
-                summary = filtered_df.groupby('customerno').agg(
-                    Max_Discount=('discount', 'max'),
-                    Transaction_Count=('discount', 'count'),
-                    Total_Spend=('value', 'sum')
-                ).round(2)
-
-                # Combine with mode values
-                summary['Most Frequent Brand'] = brand_mode
-                summary['Top Category Purchased'] = category_mode
-
-                # Final formatting
-                summary = summary.reset_index().sort_values(by='Transaction_Count', ascending=False).head(50)
-
-                st.dataframe(summary[['customerno', 'Most Frequent Brand', 'Top Category Purchased',
-                                    'Max_Discount', 'Transaction_Count', 'Total_Spend']])
-
-        elif plot_key == "Plot 7":
-            st.markdown("### Region-Brand Level Discount (%) Performance")
-
-            # Clean and standardize fields
-            df_clean['region'] = df_clean['region'].astype(str).str.strip().str.upper()
-            df_clean['brand'] = df_clean['brand'].astype(str).str.strip().str.upper()
-
-            # Remove invalid entries
-            valid_df = df_clean[
-                (df_clean['discount'] >= 0) &
-                (df_clean['qty'] > 0) &
-                (df_clean['value'] > 0) &  # prevent division by zero
-                (~df_clean['region'].isin(["NULL", "[NULL]", "NONE", "", None])) &
-                (df_clean['region'].notna()) &
-                (df_clean['brand'].notna())
-            ]
-
-            # Remove ECOM brand and fix EAST region if needed
-            valid_df = valid_df[valid_df['brand'] != 'ECOM']
-
-            # Calculate discount percentage
-            valid_df['discount_percent'] = (valid_df['discount'] / valid_df['value']) * 100
-
-            # Dropdown filters
-            regions = valid_df['region'].dropna().unique().tolist()
-            brands = valid_df['brand'].dropna().unique().tolist()
-
-            selected_regions = st.multiselect("Select Region(s):", options=sorted(regions), default=sorted(regions))
-            selected_brands = st.multiselect("Select Brand(s):", options=sorted(brands), default=sorted(brands))
-
-            # Apply filters
-            filtered_df = valid_df[
-                (valid_df['region'].isin(selected_regions)) &
-                (valid_df['brand'].isin(selected_brands))
-            ]
-
-            if filtered_df.empty:
-                st.warning("No data available for the selected filters.")
-            else:
-                # Group and summarize
-                summary = filtered_df.groupby(['region', 'brand']).agg(
-                    Avg_Discount_Percent=('discount_percent', 'mean'),
-                    Txn_Count=('discount_percent', 'count'),
-                    Total_Value=('value', 'sum')
-                ).reset_index().round(2).sort_values(by='Avg_Discount_Percent', ascending=False)
-
-                summary.rename(columns={
-                    'region': 'Region',
-                    'brand': 'Brand',
-                    'Avg_Discount_Percent': 'Avg Discount (%)',
-                    'Txn_Count': 'Transaction Count',
-                    'Total_Value': 'Total Value (₹)'
-                }, inplace=True)
-
-                st.dataframe(summary[['Region', 'Brand', 'Avg Discount (%)', 'Transaction Count', 'Total Value (₹)']])
-
-
-        elif plot_key == "Plot 8":
-            # Ensure discount_percent exists for each transaction
-            df['discount_percent'] = (df['discount'] / df['value']) * 100
-
-            # Group by brand and level, aggregate results
-            summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
-                'value': 'sum',
-                'discount': 'count',              # Number of transactions
-                'discount_percent': 'mean',       # Average discount percent
-            })
-
-            # Rename columns for clarity
-            summary_df.columns = ['Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)']
-
-            st.markdown("### Summary table")
+    elif plot_key == "Plot 7":
+        df_clean['region'] = df_clean['region'].astype(str).str.strip().str.upper()
+        df_clean['brand'] = df_clean['brand'].astype(str).str.strip().str.upper()
+        valid_df = df_clean[(df_clean['discount'] >= 0) & (df_clean['qty'] > 0) & (df_clean['value'] > 0) & (~df_clean['region'].isin(["NULL", "[NULL]", "NONE", "", None])) & (df_clean['region'].notna()) & (df_clean['brand'].notna())]
+        valid_df = valid_df[valid_df['brand'] != 'ECOM']
+        valid_df['discount_percent'] = (valid_df['discount'] / valid_df['value']) * 100
+        selected_regions = st.multiselect("Select Region(s):", sorted(valid_df['region'].dropna().unique()), default=sorted(valid_df['region'].dropna().unique()))
+        selected_brands = st.multiselect("Select Brand(s):", sorted(valid_df['brand'].dropna().unique()), default=sorted(valid_df['brand'].dropna().unique()))
+        filtered_df = valid_df[(valid_df['region'].isin(selected_regions)) & (valid_df['brand'].isin(selected_brands))]
+        if not filtered_df.empty:
+            summary_df = filtered_df.groupby(['region', 'brand']).agg(
+                Avg_Discount_Percent=('discount_percent', 'mean'),
+                Txn_Count=('discount_percent', 'count'),
+                Total_Value=('value', 'sum')
+            ).reset_index().round(2).sort_values(by='Avg_Discount_Percent', ascending=False)
+            summary_df.rename(columns={
+                'region': 'Region',
+                'brand': 'Brand',
+                'Avg_Discount_Percent': 'Avg Discount (%)',
+                'Txn_Count': 'Transaction Count',
+                'Total_Value': 'Total Value (₹)'
+            }, inplace=True)
+            st.markdown("### 🔍 Region-Brand Level Discount (%) Performance")
             st.dataframe(summary_df)
 
-        elif plot_key == "Plot 9":
-            st.markdown("### Summary table")
+    elif plot_key == "Plot 8":
+        df['discount_percent'] = (df['discount'] / df['value']) * 100
+        summary_df = df.groupby(['brand', 'level'], as_index=False).agg({
+            'value': 'sum',
+            'discount': 'count',
+            'discount_percent': 'mean',
+        })
+        summary_df.columns = ['Brand', 'Level', 'Total Value', 'Number of Transactions', 'Avg Discount (%)']
+        st.markdown("### Brand, Level Value, No of Transactions & Avg Discount % Summary")
+        st.dataframe(summary_df)
 
-            # Clean data - Match plot logic
-            valid_df = df[
-                (df['discount'] > 0) &
-                (df['value'] > 0) &
-                (~df['region'].astype(str).str.upper().isin(["NULL", "[NULL]", "NONE", "", "NAN"])) &
-                (df['region'].notna()) &
-                (df['brand'].notna())
-            ].copy()
+    elif plot_key == "Plot 9":
+        valid_df = df[(df['discount'] > 0) & (df['value'] > 0) & (~df['region'].astype(str).str.upper().isin(["NULL", "[NULL]", "NONE", "", "NAN"])) & (df['region'].notna()) & (df['brand'].notna())].copy()
+        valid_df['region'] = valid_df['region'].astype(str).str.strip().str.upper()
+        valid_df['brand'] = valid_df['brand'].astype(str).str.strip().str.upper()
+        valid_df['discount_percent'] = (valid_df['discount'] / valid_df['value']) * 100
+        selected_regions = st.multiselect("Select Region(s):", sorted(valid_df['region'].unique()), default=sorted(valid_df['region'].unique()))
+        selected_brands = st.multiselect("Select Brand(s):", sorted(valid_df['brand'].unique()), default=sorted(valid_df['brand'].unique()))
+        filtered_df = valid_df[(valid_df['region'].isin(selected_regions)) & (valid_df['brand'].isin(selected_brands))]
+        if not filtered_df.empty:
+            summary_df = (
+                filtered_df
+                .groupby(['region', 'brand', 'customerno'])['discount_percent']
+                .mean()
+                .reset_index()
+                .groupby(['region', 'brand'])['discount_percent']
+                .mean()
+                .reset_index()
+                .rename(columns={'discount_percent': 'Avg Discount (%)'})
+                .round(2)
+            )
+            st.markdown("###  Brand-wise Avg Discount (%) by Region")
+            st.dataframe(summary_df)
 
-            # Standardize region & brand
-            valid_df['region'] = valid_df['region'].astype(str).str.strip().str.upper()
-            valid_df['brand'] = valid_df['brand'].astype(str).str.strip().str.upper()
+    
 
-            # Compute row-level discount %
-            valid_df['discount_percent'] = (valid_df['discount'] / valid_df['value']) * 100
+# === AI Insight Panel ===
+    from ai_agent import display_insight_panel
 
-            # Filters
-            regions = valid_df['region'].unique().tolist()
-            brands = valid_df['brand'].unique().tolist()
+    # Safely fetch insights
+    col_insights = predefined_insights.get(plot_key, [f"No insights available for {plot_key}."])
 
-            selected_regions = st.multiselect("Select Region(s):", options=sorted(regions), default=sorted(regions))
-            selected_brands = st.multiselect("Select Brand(s):", options=sorted(brands), default=sorted(brands))
+    # Ensure insights are wrapped in a dictionary for compatibility
+    display_insight_panel(
+        x_col=plot_key,
+        predefined_insights={plot_key: col_insights},
+        summary_df=summary_df  # This is already set per plot
+    )
 
-            # Apply filters
-            filtered_df = valid_df[
-                (valid_df['region'].isin(selected_regions)) &
-                (valid_df['brand'].isin(selected_brands))
-            ]
-
-            if filtered_df.empty:
-                st.warning("No data available for the selected filters.")
-            else:
-                # Align with plot logic: average per customer first, then average per brand-region
-                summary = (
-                    filtered_df
-                    .groupby(['region', 'brand', 'customerno'])['discount_percent']
-                    .mean()
-                    .reset_index()
-                    .groupby(['region', 'brand'])['discount_percent']
-                    .mean()
-                    .reset_index()
-                    .rename(columns={'discount_percent': 'Avg Discount (%)'})
-                    .round(2)
-                )
-
-                st.dataframe(summary)
-
-    # --- Toggle Logic for Insights ---
-    toggle_key = f"show_insights_{plot_key}"  # Use plot_key here
-    if toggle_key not in st.session_state:
-        st.session_state[toggle_key] = False
-
-    def toggle():
-        st.session_state[toggle_key] = not st.session_state[toggle_key]
-
-    button_label = "Hide Detailed Business Insights" if st.session_state[toggle_key] else "Show Detailed Business Insights"
-    st.button(button_label, key=f"toggle_button_{plot_key}", on_click=toggle)
-
-    if st.session_state[toggle_key]:
-        st.markdown("### Business Insights For Stakeholders")
-        for insight in predefined_insights.get(plot_key, [f"No insights available for {plot_key}."]):
-            st.markdown(f"- {insight}")
 
