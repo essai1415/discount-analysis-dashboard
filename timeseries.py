@@ -11,15 +11,16 @@ from matplotlib.ticker import MaxNLocator
 predefined_insights = {
     "Plot 1": [
         "Spikes in discounts (Days 9–13) may align with events like festivals, auspicious dates, or marketing campaigns.",
-        "Sudden drop after peak days suggests end of limited period offers or demand saturation post events.",
+        "Sudden drop after peak days suggests end of limited-period offers or demand saturation post events.",
         "Steady mid to end month discounting may indicate efforts to sustain engagement or clear non premium stock.",
         "Low discounts in the first week could reflect strategy to maintain premium pricing before planned triggers.",
         "Analyzing discount trends alongside festivals like Akshaya Tritiya, wedding season can improve campaign timing and inventory planning."
     ],
     "Plot 2": [
         "Comparing sales on days with high OBDISC vs GHSDISC can help decide which type of discount works better.",
-        "OBDISC changes a lot, with big jumps on days like 1-4, 17, and 25 this may be due to special store offers or quick sales pushes.",
+        "OBDISC changes a lot, with big jumps on days like 17, 21, and 25 — this may be due to special store offers or quick sales pushes.",
         "GHSDISC stays more steady, showing it’s part of a planned customer scheme.",
+        "On days like the 31st, both discounts rise together — this might be to boost end-of-month sales.",
         "GHSDISC builds long-term loyalty, while OBDISC helps with quick sales when needed."
     ],
     "Plot 3": [
@@ -78,7 +79,7 @@ def plot_and_insight(df, plot_key, plot_label):
             plt.clf()
 
         elif plot_key == "Plot 2":
-                st.subheader("Daily Trend of OBDISC and GHSDISC")
+                st.subheader("Daily Trend of OBDISC and GHSDISC (as % of Bill Value)")
 
                 idisc_cols = ['obdisc', 'ghsdisc']
                 df2 = df.dropna(subset=idisc_cols + ['value'])
@@ -285,7 +286,7 @@ def plot_and_insight(df, plot_key, plot_label):
 
 
         elif plot_key == "Plot 2":
-            st.markdown("### Summary table")
+            st.markdown("### Summary of OBDISC and GHSDISC Trends by Day (as % of Bill Value)")
 
             idisc_cols = ['obdisc', 'ghsdisc']
             df2 = df.dropna(subset=idisc_cols + ['value'])
@@ -330,6 +331,7 @@ def plot_and_insight(df, plot_key, plot_label):
 
             summary_df = pd.DataFrame(summary_data)
 
+            st.write("**Key Insights from OBDISC and GHSDISC (Daily Averages as % of Bill Value)**")
             st.dataframe(summary_df, use_container_width=True)
 
 
@@ -527,18 +529,23 @@ def plot_and_insight(df, plot_key, plot_label):
                 st.write(" **Returns by Day of Month (Filtered)**")
                 st.dataframe(filtered_df, use_container_width=True)
 
-    # --- Toggle Logic for Insights ---
-    toggle_key = f"show_insights_{plot_key}"  # Use plot_key here
-    if toggle_key not in st.session_state:
-        st.session_state[toggle_key] = False
+    # === AI logic ===
+    from ai_agent import display_insight_panel
 
-    def toggle():
-        st.session_state[toggle_key] = not st.session_state[toggle_key]
+    # Safely fetch insights
+    col_insights = predefined_insights.get(plot_key, [f"No insights available for {plot_key}."])
 
-    button_label = "Hide Detailed Business Insights" if st.session_state[toggle_key] else "Show Detailed Business Insights"
-    st.button(button_label, key=f"toggle_button_{plot_key}", on_click=toggle)
+    # Handle summary conversion if it's a list
+    if isinstance(summary_data, list) and len(summary_data) > 1:
+        summary_data = pd.DataFrame(summary_data[1:], columns=summary_data[0])
+    elif isinstance(summary_data, pd.DataFrame):
+        summary_data = summary_data
+    else:
+        summary_data = None
 
-    if st.session_state[toggle_key]:
-        st.markdown("### Business Insights For Stakeholders")
-        for insight in predefined_insights.get(plot_key, [f"No insights available for {plot_key}."]):
-            st.markdown(f"- {insight}")
+    # Call AI insight panel
+    display_insight_panel(
+        x_col=plot_key,
+        predefined_insights={plot_key: col_insights},
+        summary_df=summary_data  # Kept as 'summary_df' to match function signature in ai_agent.py
+    )
