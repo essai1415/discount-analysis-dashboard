@@ -27,7 +27,7 @@ st.markdown(
     <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 30px;">
         <div style="display: flex; align-items: center; gap: 15px; white-space: nowrap; overflow: hidden;">
             <img src="data:image/png;base64,{encoded}" width="50"/>
-            <span style="font-size: 2.2rem; font-weight: bold;">Jewellery Discount Analysis Dashboard</span>
+            <span style="font-size: 1.79rem; font-weight: bold;">AI Powered Jewellery Discount Analysis Dashboard</span>
         </div>
     </div>
     """,
@@ -297,3 +297,4 @@ elif analysis_type == "Time Series Analysis":
 
 elif analysis_type == "Facts and Figures":
     fandf.show_facts_and_figures(df)
+
