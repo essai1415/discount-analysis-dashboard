@@ -55,7 +55,7 @@ def display_insight_panel(x_col, predefined_insights, summary_df, model="llama3-
         st.session_state[toggle_key_2] = not st.session_state[toggle_key_2]
 
     st.button(
-        "Hide AI Powered Strategic Action" if st.session_state[toggle_key_2] else "Reveal AI Powered Strategic Action",
+        "Hide AI Powered Action Plan" if st.session_state[toggle_key_2] else "Reveal AI Powered Action Plan",
         key=f"btn_ai_{x_col}",
         on_click=toggle_ai,
     )
@@ -169,6 +169,7 @@ def format_summary(summary_data):
     if not isinstance(summary_data, list):
         return "Invalid summary format."
     return "\n".join([f"• {' — '.join(map(str, row))}" for row in summary_data])
+
 
 
 
