@@ -259,7 +259,7 @@ elif analysis_type == "Multivariate Analysis":
     multivariate_plot_labels = {
         "Plot 1": "1. Top 20 Discounted Transactions by Location",
         "Plot 2": "2. Return Rate: With vs Without Discount",
-        "Plot 3": "3. Average Discount for New vs Existing Customers",
+        "Plot 3": "3. Average Discount for One Time vs Multiple Time Buyers",
         "Plot 4": "4. Discount vs Day and Gold Price",
         "Plot 5": "5. Correlation of Discounts with Numeric Variables",
         "Plot 6": "6. Top 50 Customers by Avg Discount",
@@ -297,4 +297,5 @@ elif analysis_type == "Time Series Analysis":
 
 elif analysis_type == "Facts and Figures":
     fandf.show_facts_and_figures(df)
+
 
