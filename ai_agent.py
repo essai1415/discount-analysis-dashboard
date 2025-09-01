@@ -17,7 +17,7 @@ import re
 groq_api_key = st.secrets["groq"]["groq_api_key"]
 client = Groq(api_key=groq_api_key)
 
-def display_insight_panel(x_col, predefined_insights, summary_df, model="llama3-70b-8192"):
+def display_insight_panel(x_col, predefined_insights, summary_df, model="llama-3.1-8b-instant"):
     if not predefined_insights:
         return
 
@@ -169,6 +169,7 @@ def format_summary(summary_data):
     if not isinstance(summary_data, list):
         return "Invalid summary format."
     return "\n".join([f"• {' — '.join(map(str, row))}" for row in summary_data])
+
 
 
 
