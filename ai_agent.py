@@ -169,9 +169,3 @@ def format_summary(summary_data):
     if not isinstance(summary_data, list):
         return "Invalid summary format."
     return "\n".join([f"• {' — '.join(map(str, row))}" for row in summary_data])
-
-
-
-
-
-
