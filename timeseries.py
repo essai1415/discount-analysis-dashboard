@@ -40,7 +40,7 @@ predefined_insights = {
     "Plot 5": [
         "Total of 420 return transactions during the month, ~13–14 per day.",
         "Return spikes on Days 13, 18, 25, 30, suggesting post-offer dissatisfaction.",
-        "Tanishq had 349 returns, far more than Malabar (68) and Joy (3).",
+        "Tanishq had 349 returns, far more than Mia (68) and Zoya (3).",
         "Returns mostly from DIA (167), GIS (97), MCG (67), showing higher dissatisfaction in gems/diamonds.",
         "Average daily return rate low (~13) compared to peak transactions (>700), manageable returns."
     ]
@@ -321,3 +321,4 @@ def plot_and_insight(df, plot_key, plot_label=""):
             predefined_insights={plot_key: col_insights},
             summary_df=summary_df
         )
+
