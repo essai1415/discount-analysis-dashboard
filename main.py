@@ -222,7 +222,7 @@ elif analysis_type == "Qualitative Analysis":
     elif selected_plot == plot_options[5]:
         df_plot = df[df['amcb'].notnull()].copy()
         df_plot['amcb'] = df_plot['amcb'].astype(str).str.strip().str.upper()
-        valid_bands = ["A(1-10%)", "B(11-14%)", "C(14-18%)", "D(18-24%)", "E(24-30%)", "F(30%+)"]
+        valid_bands = ["F(30%+)", "E(24-30%)","D(18-24%)","C(14-18%)","B(11-14%)", "A(1-10%)"]
         df_plot = df_plot[df_plot['amcb'].isin(valid_bands) & (df_plot['discount'] > 0)]
         df_plot = df_plot.groupby('amcb')['discount'].mean().reset_index()
         qualitative.plot_and_insight(df_plot, 'amcb', "AMCB Band", category_order=valid_bands)
@@ -297,5 +297,6 @@ elif analysis_type == "Time Series Analysis":
 
 elif analysis_type == "Facts and Figures":
     fandf.show_facts_and_figures(df)
+
 
 
